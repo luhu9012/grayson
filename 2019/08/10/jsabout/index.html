@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>js运行机制 | 前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="js运行机制相关引用：https://github.com/mqyqingfeng/Blog/issues/17 相关术语es5之前只有全局作用域和函数作用域，es6加入了块级作用域  Execution Context(执行环境或执行上下文)  Context Stack (执行栈)  Variable Object(VO: 变量对象) es5   JS的执行上下文中都有个对象用来存放执行上下文">
+<meta name="keywords" content="js基础 js运行机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js运行机制">
+<meta property="og:url" content="https://luhu9012.github.io/2019/08/10/jsabout/index.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="js运行机制相关引用：https://github.com/mqyqingfeng/Blog/issues/17 相关术语es5之前只有全局作用域和函数作用域，es6加入了块级作用域  Execution Context(执行环境或执行上下文)  Context Stack (执行栈)  Variable Object(VO: 变量对象) es5   JS的执行上下文中都有个对象用来存放执行上下文">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-12-14T04:15:53.447Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js运行机制">
+<meta name="twitter:description" content="js运行机制相关引用：https://github.com/mqyqingfeng/Blog/issues/17 相关术语es5之前只有全局作用域和函数作用域，es6加入了块级作用域  Execution Context(执行环境或执行上下文)  Context Stack (执行栈)  Variable Object(VO: 变量对象) es5   JS的执行上下文中都有个对象用来存放执行上下文">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-jsabout" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      js运行机制
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-08-10
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="js运行机制"><a href="#js运行机制" class="headerlink" title="js运行机制"></a>js运行机制</h3><p>相关引用：<a href="https://github.com/mqyqingfeng/Blog/issues/17" target="_blank" rel="noopener">https://github.com/mqyqingfeng/Blog/issues/17</a></p>
+<h4 id="相关术语"><a href="#相关术语" class="headerlink" title="相关术语"></a>相关术语</h4><p>es5之前只有全局作用域和函数作用域，es6加入了块级作用域</p>
+<ul>
+<li><p>Execution Context(执行环境或执行上下文)</p>
+</li>
+<li><p>Context Stack (执行栈)</p>
+</li>
+<li><p>Variable Object(VO: 变量对象) es5</p>
+</li>
+</ul>
+<p>JS的执行上下文中都有个对象用来存放执行上下文中可被访问但是不能被delete的函数标示符、形参、变量声明等。它们会被挂在这个对象上，对象的属性对应它们的名字对象属性的值对应它们的值但这个对象是规范上或者说是引擎实现上的不可在JS环境中访问到活动对象</p>
+<p>创建VO对象可以大致分为四步 - 1.创建arguments对象 - 2.扫描上下文的函数声明(而非函数表达式),为发现的每一个函数，在变量对象上创建一个属性——确切的说是函数的名字——其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。 - 3.扫描上下文的变量声明,为发现的每个变量声明，在变量对象上创建一个属性——就是变量的名字，并且将变量的值初始化为undefined。如果变量的名字已经在变量对象里存在，将不会进行任何操作并继续扫描。</p>
+<p> 整个过程可以大概描述成： 函数的形参=&gt;函数声明=&gt;变量声明， 其中在创建函数声明时，如果名字存在，则会被重写，在创建变量时，如果变量名存在，则忽略不会进行任何操作</p>
+<ul>
+<li><p>Active Object(AO: 活动对象) es5<br>有了变量对象存每个上下文中的东西，但是它什么时候能被访问到呢？就是每进入一个执行上下文时，这个执行上下文儿中的变量对象就被激活，也就是该上下文中的函数标示符、形参、变量声明等就可以被访问到了</p>
+</li>
+<li><p>LexicalEnvironment（词法环境） es6</p>
+</li>
+</ul>
+<p>词法环境由两个部分组成 - 环境记录(enviroment record)，存储变量和函数声明 - 对外部环境的引用(outer)，可以通过它访问外部词法环境.</p>
+<p>环境记录分两部分 - 声明性环境记录(declarative environment records)： 存储变量、函数和参数, 但是主要用于函数 、catch词法环境。 注意：函数环境下会存储arguments的值。而详细的过程可以参考VO 的执行细节，基本大同小异 - 对象环境记录(object environment records), 主要用于with 和全局的词法环境</p>
+<ul>
+<li>VariableEnvironment（变量环境）es6<br>变量环境也是个词法环境，主要的区别在于lexicalEnviroment用于存储函数声明和变量（ let 和 const ）绑定，而ObjectEnviroment仅用于存储变量（ var ）绑定。</li>
+</ul>
+<h4 id="执行环境的创建过程"><a href="#执行环境的创建过程" class="headerlink" title="执行环境的创建过程"></a>执行环境的创建过程</h4><p>执行环境的创建分为两个阶段，创建阶段和激活/执行阶段，es3和es5规范不同：</p>
+<blockquote>
+<p>es5:<br>创建阶段： - 1.创建作用域链。 - 2.创建变量对象VO(包括参数，函数，变量)。 - 3.确定this的值。</p>
+<blockquote>
+<p>函数的作用域在定义时就确定了，函数内部有个[[scope]]属性保存其父级变量的层级链，函数在执行前会复制[[scope]]创建作用域链<br>js采用的是词法作用域，是静态作用域，在函数定义时就决定了，如下例子：</p>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var value = 1;</span><br><span class="line"></span><br><span class="line">function foo() &#123;</span><br><span class="line">    console.log(value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function bar() &#123;</span><br><span class="line">    var value = 2;</span><br><span class="line">    foo();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bar();// 1</span><br></pre></td></tr></table></figure>
+
+<p>激活/执行阶段： - 完成变量分配，执行代码。</p>
+<blockquote>
+<p>es6规范<br>创建阶段： - 1.确定 this 的值。 - 2.创建词法环境(LexicalEnvironment)。 - 3.创建变量环境(VariableEnvironment)。</p>
+</blockquote>
+<p>激活/执行阶段： - 完成变量分配，执行代码。</p>
+<h4 id="Temporal-Dead-Zone-TDZ-暂时性死区理解"><a href="#Temporal-Dead-Zone-TDZ-暂时性死区理解" class="headerlink" title="Temporal Dead Zone(TDZ)暂时性死区理解"></a>Temporal Dead Zone(TDZ)暂时性死区理解</h4><blockquote>
+<p>TDZ相关：let const 默认参数<br>TDZ解释：let const 变量在词法环境初始化时被创建，但是在变量的词法绑定被执行前他们不能被以任何形式被访问。在词法绑定被执行的时候用他的初始化器的赋值表达式的计算结果来赋值，而不是在变量被创建的时候赋值。如果一个let声明的词法绑定没有初始化器，那么这个变量在初始化绑定被执行的时候会被用undefined赋值。<br>TDZ陷阱：<br>typeof x ；</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  // TDZ</span><br><span class="line">  typeof x // ReferenceError</span><br><span class="line">  let x = 42</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let y = y // ReferenceError;</span><br><span class="line"></span><br><span class="line">// Default parameters are evaluated from left to right,</span><br><span class="line">// so `b` is in the TDZ when `a`&apos;s initializer tries to read it.</span><br><span class="line">(function(a = b, b) &#123;&#125;(undefined, 1)); // ReferenceError</span><br><span class="line"></span><br><span class="line">// `a` is still in the TDZ when its own initializer tries to read `a`.</span><br><span class="line">// See the &quot;gory details&quot; section above for more details.</span><br><span class="line">(function(a = a) &#123;&#125;()); // ReferenceError</span><br></pre></td></tr></table></figure>
+
+<p>子类（通过class x extends y{}创建的）的构造器如果在super构造器调用之前尝试访问this也会抛出TDZ的ReferenceError。这是因为只要一个子类的构造器还没有调用super(), 他的this绑定就被认为是未初始化</p>
+<p>TDZ期间抛出的错误是运行阶段的错误；<br>运行效能比var低；<br>转译到es5;</p>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><h4 id="垃圾回收之引用计数（IE-6-7）"><a href="#垃圾回收之引用计数（IE-6-7）" class="headerlink" title="垃圾回收之引用计数（IE 6, 7）"></a>垃圾回收之引用计数（IE 6, 7）</h4><blockquote>
+<p>如果没有引用指向该对象（零引用），对象将被垃圾回收机制回收<br>缺点：无法处理循环引用的事例</p>
+</blockquote>
+<h4 id="垃圾回收之标记清除法（2012年起所有浏览器）"><a href="#垃圾回收之标记清除法（2012年起所有浏览器）" class="headerlink" title="垃圾回收之标记清除法（2012年起所有浏览器）"></a>垃圾回收之标记清除法（2012年起所有浏览器）</h4><blockquote>
+<p>这个算法假定设置一个叫做根（root）的对象（在Javascript里，根是全局对象）。垃圾回收器将定期从根开始，找所有从根开始引用的对象，然后找这些对象引用的对象……从根开始，垃圾回收器将找到所有可以获得的对象和收集所有不能获得的对象。<br>解决了循环引用的问题<br>限制：那些无法从根对象查询到的对象都将被清除</p>
+</blockquote>
+<h3 id="理解继承与原型链"><a href="#理解继承与原型链" class="headerlink" title="理解继承与原型链"></a>理解继承与原型链</h3><h4 id="proto-与-prototype的区别"><a href="#proto-与-prototype的区别" class="headerlink" title="proto 与 prototype的区别"></a><strong>proto</strong> 与 prototype的区别</h4><blockquote>
+<p>对象原型<strong>proto</strong>：是每个实例对象都有的属性，可以通过es6的Object.getPrototypeOf(someobj)读取，是从构造函数的prototype属性派生<br> 只有浏览器必须部署这个属性，其他运行环境不一定需要部署，而且新的代码最好认为这个属性是不存在的。因此，无论从语义的角度，还是从兼容性的角度，都不要使用这个属性，而是使用下面的Object.setPrototypeOf()（写操作）、Object.getPrototypeOf()（读操作）、Object.create()（生成操作）代替<br>构造函数的prototype：prototype是构造函数的属性，每个函数都有一个特殊的属性prototype叫做原型（new生成的实例对象没有prototype只有<strong>proto</strong>）<br>一个对象的<strong>proto</strong>属性指向创建该对象的构造函数的prototype，即：o.<strong>proto</strong> === o.constructor.prototype</p>
+</blockquote>
+<blockquote>
+<p><a href="../imgs/prototype.jpg">‘原型链图解’</a></p>
+</blockquote>
+<h4 id="prototype-继承成员被定义的地方"><a href="#prototype-继承成员被定义的地方" class="headerlink" title="prototype: 继承成员被定义的地方"></a>prototype: 继承成员被定义的地方</h4><blockquote>
+<p>并不是对象的所有属性成员都被继承，只有定义在prototype指向的对象上的属性才能被继承，如Object.valueof Object.toString等可以被继承，而Object.keys Object.getPrototypeOf等属性只能被Object构造器自身调用</p>
+</blockquote>
+<blockquote>
+<p>Object.create():实际做的是从指定原型对象创建一个新的对象,var person2 = Object.create(person1);person2.<strong>proto</strong> === person1</p>
+</blockquote>
+<h3 id="模拟call或者apply"><a href="#模拟call或者apply" class="headerlink" title="模拟call或者apply"></a>模拟call或者apply</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.myCall = function(context)&#123;</span><br><span class="line">    var ctx = context||window</span><br><span class="line">    ctx.fn = this // this指向当前调用的函数</span><br><span class="line">    // Array.prototype.slice.apply(arguments)</span><br><span class="line">    var args = []</span><br><span class="line">    // 从第二个参数开始</span><br><span class="line">    for(var i=1;i&lt;arguments.length;i++)&#123;</span><br><span class="line">        args.push(arguments[i])</span><br><span class="line">    &#125;</span><br><span class="line">   var result = eval(&apos;ctx.fn(&apos;+args+&apos;)&apos;)</span><br><span class="line">   delete ctx.fn</span><br><span class="line">   return result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="arguments-callee-与-Function-caller"><a href="#arguments-callee-与-Function-caller" class="headerlink" title="arguments callee 与 Function.caller"></a>arguments callee 与 Function.caller</h3><blockquote>
+<p>arguments callee:<br>es6规范中已被删除，不建议使用；<br>es6之前引入是解决匿名函数的递归调用</p>
+</blockquote>
+<blockquote>
+<p>Function.caller<br>非标准特性，不建议使用<br>如果一个函数f是在全局作用域内被调用的,则f.caller为null,相反,如果一个函数是在另外一个函数作用域内被调用的,则f.caller指向调用它的那个函数.<br>该属性的常用形式arguments.callee.caller替代了被废弃的 arguments.caller.</p>
+</blockquote>
+<h3 id="递归与尾递归"><a href="#递归与尾递归" class="headerlink" title="递归与尾递归"></a>递归与尾递归</h3><p>递归，是指在函数的定义中使用函数自身的一种方法。函数调用自身即称为递归，那么函数在尾调用自身，即称为尾递归。</p>
+<blockquote>
+<p>解决调用栈过多问题，方案一：尾递归<br>解决调用栈过多问题，方案二：改用循环</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 斐波那契普通写法</span><br><span class="line">// 调用栈随着n的增加而线性增加，当n为一个大数（大概测了一下，当n为100的时候，浏览器窗口就会卡死。。）时，就会爆栈了（栈溢出，stack overflow）</span><br><span class="line">function fibo(n)&#123;</span><br><span class="line">    if(n===0) return 0</span><br><span class="line">    if(n===1) return 1</span><br><span class="line">    return f(n-1)+f(n-2)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 尾递归</span><br><span class="line">// 被尾递归改写之后的调用栈永远都是更新当前的栈帧而已，这样就完全避免了爆栈的危险</span><br><span class="line">function fibo(n,a=0,b=1)&#123;</span><br><span class="line">    if(n===0) return a</span><br><span class="line">    return fibo(n-1,b,a+b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 动态规划的思想，转化为循环</span><br><span class="line">function fibo(n)&#123;</span><br><span class="line">    if(n===0) return 0</span><br><span class="line">    if(n===1) return 1</span><br><span class="line">    let res,a=0,b=1</span><br><span class="line">    for(let i=2,i&lt;=n;i++)&#123;</span><br><span class="line">       // res = a+b</span><br><span class="line">       // a= b</span><br><span class="line">       // b = res </span><br><span class="line">       b = a+b</span><br><span class="line">       a = b-a</span><br><span class="line">    &#125;</span><br><span class="line">    return res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h3><p>调用函数时会将当前指令地址、当前环境上下文的变量、目标函数的参数压栈，目标函数返回后再弹栈恢复上下文并继续执行下一条指令。因此如果调用函数层次太深就会导致压栈内容过多而爆栈。</p>
+<p>而对于尾调用来说，由于本函数的最后一步操作还是函数调用，因此将当前调用位置和上下文相关变量压栈就变得没有必要了（本次调用完毕后直接返回再上一层的调用位置，同时本函数不会再访问或者修改当前上下文变量），因此对尾调用来说只需要将目标函数的参数压栈然后跳转到目标函数处即可，如果调用过程中所有函数调用都是尾调用（尾递归即为典型），就能实现在调用过程中仅用一块栈帧保存所有中间目标函数的参数，从而大大优化栈内存使用情况。这就是尾调用优化的思路。</p>
+<h4 id="trampoline"><a href="#trampoline" class="headerlink" title="trampoline"></a>trampoline</h4><p>trampoline可以用来代替尾调用优化的作用，该技术可以让你在不使用尾递归优化工具的情况下获得递归的一些好处，但是它们由于侵入性太强而不能被普遍使用。</p>
+<p>函数式语言里的trampoline一般是个循环，这个循环迭代地调用某些函数，这些函数会返回一个 thunk，然后程序员可以在基于栈的编程语言里利用这个trampoline实现尾递归函数。</p>
+<p>thunk <a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html" target="_blank" rel="noopener">Thunk 函数的含义和用法</a><br>thunk起源于call-by-name求值策略，call-by-name指函数的参数在函数被调用（该参数被实际访问到）时才对参数求值，而一般实现上会在表达式求值时将call-by-name参数出现的地方作类似inline展开的操作，这样会导致存在参数表达式的多份副本。因此对call-by-name参数，编译器会生成一个helper把参数表达式塞进去，用来统一计算并返回该变量的值，这个helper就是thunk，在此基础上编译器还可以将thunk的计算结果缓存起来消除重复计算。</p>
+<p>编译器的”传名调用”实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函数就叫做 Thunk 函数。<br>我们也可以显示地生成thunk，方法就是将参数表达式用无参匿名函数包起来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function f(m)&#123;</span><br><span class="line">return m * 2;     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f(x + 5);</span><br><span class="line"></span><br><span class="line">// 等同于</span><br><span class="line"></span><br><span class="line">var thunk = function () &#123;</span><br><span class="line">return x + 5;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">function f(thunk)&#123;</span><br><span class="line">return thunk() * 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于尾递归来说，其调用栈是通过迭代地调用自身来构造的；<br>trampoline是一种通过迭代地调用特定函数的方式，可以用来实现尾递归，这些特定函数会返回一个thunk，即无参匿名函数；</p>
+<p>到这里trampoline的思路就比较清楚了。尾递归函数通过在执行结束时同步地调用自身，利用函数调用栈迭代地构造和遍历串行函数流；而对应的trampoline版本，则改写了尾递归函数，在函数执行完毕时将下一步调用自身的操作封装成一个thunk并返回（这个thunk对应的就是下一步的continuation），对应迭代调用自身的操作交由上一层的循环统一处理。solution的核心思路就是：<br>把尾递归函数改写成一个对应串行函数流的‘迭代器’，trampoline遍历这个‘迭代器’实现对串行函数流的遍历调用。这个‘迭代器’代替了函数调用栈的作用，因此解决了调用尾递归函数时调用栈超限的问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// native recursive 尾递归</span><br><span class="line">function repeat(operation, num) &#123;</span><br><span class="line">    // Modify this so it doesn&apos;t cause a stack overflow!</span><br><span class="line">	if (num &lt;= 0) return;</span><br><span class="line">	operation();</span><br><span class="line">	repeat(operation, --num);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// with trampoline  trampoline实现</span><br><span class="line">function repeat(operation, num) &#123;</span><br><span class="line">    // Modify this so it doesn&apos;t cause a stack overflow!</span><br><span class="line">	if (num &lt;= 0) return;</span><br><span class="line">	operation();</span><br><span class="line">    return function()&#123;</span><br><span class="line">		return repeat(operation, --num);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function trampoline(fn) &#123;</span><br><span class="line">    // You probably want to implement a trampoline!</span><br><span class="line">    while(fn &amp;&amp; typeof fn === &apos;function&apos;) &#123;</span><br><span class="line">		fn = fn();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = function (operation, num) &#123;</span><br><span class="line">    // You probably want to call your trampoline here!</span><br><span class="line">    return trampoline(repeat(operation, num));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h4 id="复合赋值运算符"><a href="#复合赋值运算符" class="headerlink" title="复合赋值运算符"></a>复合赋值运算符</h4><p>赋值(Assignment)    x = y    x = y<br>加法赋值(Addition assignment)    x += y    x = x + y<br>减法赋值(Subtraction assignment)    x -= y    x = x - y<br>乘法赋值(Multiplication assignment)    x <em>= y    x = x * y<br>除法赋值(Division assignment)    x /= y    x = x / y<br>求余赋值(Remainder assignment)    x %= y    x = x % y<br>求幂赋值(Exponentiation assignment)    x *</em>= y    x = x ** y<br>左移位赋值(Left shift assignment)    x &lt;&lt;= y    x = x &lt;&lt; y<br>右移位赋值(Right shift assignment)    x &gt;&gt;= y    x = x &gt;&gt; y<br>无符号右移位赋值(Unsigned right shift assignment)    x &gt;&gt;&gt;= y    x = x &gt;&gt;&gt; y<br>按位与赋值(Bitwise AND assignment)    x &amp;= y    x = x &amp; y<br>按位异或赋值(Bitwise XOR assignment)    x ^= y    x = x ^ y<br>按位或赋值(Bitwise OR assignment)    x |= y    x = x | y</p>
+<h3 id="模块机制"><a href="#模块机制" class="headerlink" title="模块机制"></a>模块机制</h3><h4 id="ES5模块机制"><a href="#ES5模块机制" class="headerlink" title="ES5模块机制"></a>ES5模块机制</h4><p>模块模式两个必要条件：</p>
+<ol>
+<li>必须有外部的封闭函数，该函数必须至少被调用一次，每次调用创建一个新的模块实例</li>
+<li>封闭函数必须至少返回一个内部函数，这样内部函数才能在私有作用域内形成闭包,并可以访问修改私有状态</li>
+</ol>
+<p>实现一个简单的模块加载器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">// 模块管理器</span><br><span class="line">let MyModules = (function Manage()&#123;</span><br><span class="line">    var modules = &#123;&#125;</span><br><span class="line">    // 定义方法</span><br><span class="line">    function define(moduleName,deps,module)&#123;</span><br><span class="line">        deps.forEarch(function(dep,i)&#123;</span><br><span class="line">            deps[i] = modules[deps[i]]</span><br><span class="line">        &#125;)</span><br><span class="line">        modules[moduleName] = module.apply(module,deps) // 为模块定义引入包装函数</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取模块</span><br><span class="line">    function get(moduleName)&#123;</span><br><span class="line">        return modules[moduleName]</span><br><span class="line">    &#125;</span><br><span class="line">    // 暴露公共api</span><br><span class="line">    return &#123;</span><br><span class="line">        define:define,</span><br><span class="line">        get:get</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">// 定义模块</span><br><span class="line">MyModules.define(&apos;bar&apos;,[],function()&#123;</span><br><span class="line">    function say(name)&#123;</span><br><span class="line">        console.log(&apos;i am &apos;,name)</span><br><span class="line">    &#125;</span><br><span class="line">    return &#123;</span><br><span class="line">        say:say</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">// 定义模块</span><br><span class="line">MyModules.define(&apos;foo&apos;,[&apos;bar&apos;],function(bar)&#123;</span><br><span class="line">    function do()&#123;</span><br><span class="line">        console.log(bar.say(&apos;hello foo&apos;))</span><br><span class="line">    &#125;</span><br><span class="line">    return &#123;</span><br><span class="line">        do:do</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">var bar = MyModules.get(&apos;bar&apos;)</span><br><span class="line">var foo = MyModules.get(&apos;foo&apos;)</span><br><span class="line"></span><br><span class="line">foo.do()</span><br></pre></td></tr></table></figure>
+
+<h4 id="ES6模块机制"><a href="#ES6模块机制" class="headerlink" title="ES6模块机制"></a>ES6模块机制</h4><p>上诉基于函数的模块并不是一个能被稳定识别的模式（编译器无法识别），它们的api只有运行时才能用到，因此可以在运行时修改模块的api</p>
+<p>es6为模块增加了一级语法支持，将每个模块作为独立的文件处理，es5模块没有“行内”模式，能被编译器静态分析</p>
+<h3 id="this绑定规则"><a href="#this绑定规则" class="headerlink" title="this绑定规则"></a>this绑定规则</h3><p>按优先级：</p>
+<ol>
+<li>是否是new绑定，是的话this绑定的是新创建的对象</li>
+<li>若是通过apply call显示绑定或者 bind forEach硬绑定，this绑定的是其指向的对象，如果指定的对象是null undefine会使用4默认绑定</li>
+<li>若函数是在某个上下文调用（隐式绑定），this指向那个上下文</li>
+<li>如果以上都不是则使用默认绑定，严格模式下绑定到undefine,否则绑定到全局对象</li>
+</ol>
+<p>特殊的：箭头函数的this绑定词法作用域，根据外层的作用域来决定的。</p>
+<h4 id="软绑定实现"><a href="#软绑定实现" class="headerlink" title="软绑定实现"></a>软绑定实现</h4><p>通过aplly call bind等硬绑定会大大降低函数的灵活性，使用硬绑定之后就无法使用隐式绑定或者显示绑定来修改this，这种情况可以使用软绑定解决，软绑定指定一个不是全局也不是undefine的对象替换this的默认绑定，就可以实现和硬绑定一样的效果，同时保留显示绑定或隐式绑定修改this的能力：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if(!Function.prototype.softeBind)&#123;</span><br><span class="line">Function.prototype.softeBind = function(obj)&#123;</span><br><span class="line">    var fn = this</span><br><span class="line">    var args = Array.prototype.slice.call(arguments,1)</span><br><span class="line">    var bound = fucntion()&#123;</span><br><span class="line">        return fn.apply((!this||this===(window||global))?obj:this,args.concat.apply(args,arguments))  // 可以使用部分求值 可理化参数</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    bound.prototype = Object.create(fn.prototype)</span><br><span class="line">    return bound</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="iterator"><a href="#iterator" class="headerlink" title="iterator"></a>iterator</h3><p>普通对象是没有内置的@@iterator的，所以没法完成for of遍历，但是通过Symbol.iterator 定义一个普通对象的迭代器函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">var testObj = &#123;</span><br><span class="line">    a:1,</span><br><span class="line">    b:2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Object.defineProperty(testObj,Symbol.iterator,&#123;</span><br><span class="line">    writable:false,</span><br><span class="line">    enumerable:false,</span><br><span class="line">    configrable:true,</span><br><span class="line">    value:function()&#123;</span><br><span class="line">        let index = 0</span><br><span class="line">        let keys = Object.keys(this) // 仅仅测试直接属性，不包括[[prototype]]上的属性</span><br><span class="line">        let self = this</span><br><span class="line">        return &#123;</span><br><span class="line">            next:function()&#123;</span><br><span class="line">                return &#123;</span><br><span class="line">                    value:self[keys[index++]],</span><br><span class="line">                    done:index&gt;keys.length // index&gt;keys.length 要多一步next</span><br><span class="line">                    &#125; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">// 手动遍历</span><br><span class="line">var it = testObj[Symbol.iterator]() // Symbol.iterator本身不是一个迭代器对象，只是一个返回迭代器对象的函数</span><br><span class="line">it.next() // &#123;value:1,done:false&#125;</span><br><span class="line">it.next() // &#123;value:2,done:false&#125;</span><br><span class="line">it.next() // &#123;value:undefined,done:true&#125;</span><br><span class="line"></span><br><span class="line">// for of 遍历</span><br><span class="line"></span><br><span class="line">for(let v of testObj)&#123;</span><br><span class="line">    console.log(v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年12月14日 12:15</p>
+        <p>原始链接： <a class="post-url" href="/2019/08/10/jsabout/" title="js运行机制">https://luhu9012.github.io/2019/08/10/jsabout/</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/2019/08/10/jsabout/&title=《js运行机制》 — 前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/2019/08/10/jsabout/&title=《js运行机制》 — 前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/2019/08/10/jsabout/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《js运行机制》 — 前端笔记&url=https://luhu9012.github.io/2019/08/10/jsabout/&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/2019/08/10/jsabout/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/2019/08/10/jsabout/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/js基础js运行机制/" class="color2">js基础 js运行机制</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#js运行机制"><span class="post-toc-text">js运行机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#相关术语"><span class="post-toc-text">相关术语</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#执行环境的创建过程"><span class="post-toc-text">执行环境的创建过程</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Temporal-Dead-Zone-TDZ-暂时性死区理解"><span class="post-toc-text">Temporal Dead Zone(TDZ)暂时性死区理解</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#内存管理"><span class="post-toc-text">内存管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#垃圾回收之引用计数（IE-6-7）"><span class="post-toc-text">垃圾回收之引用计数（IE 6, 7）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#垃圾回收之标记清除法（2012年起所有浏览器）"><span class="post-toc-text">垃圾回收之标记清除法（2012年起所有浏览器）</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#理解继承与原型链"><span class="post-toc-text">理解继承与原型链</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#proto-与-prototype的区别"><span class="post-toc-text">proto 与 prototype的区别</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#prototype-继承成员被定义的地方"><span class="post-toc-text">prototype: 继承成员被定义的地方</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#模拟call或者apply"><span class="post-toc-text">模拟call或者apply</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#arguments-callee-与-Function-caller"><span class="post-toc-text">arguments callee 与 Function.caller</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#递归与尾递归"><span class="post-toc-text">递归与尾递归</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#尾调用优化"><span class="post-toc-text">尾调用优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#trampoline"><span class="post-toc-text">trampoline</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#运算符"><span class="post-toc-text">运算符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#复合赋值运算符"><span class="post-toc-text">复合赋值运算符</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#模块机制"><span class="post-toc-text">模块机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ES5模块机制"><span class="post-toc-text">ES5模块机制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ES6模块机制"><span class="post-toc-text">ES6模块机制</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this绑定规则"><span class="post-toc-text">this绑定规则</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#软绑定实现"><span class="post-toc-text">软绑定实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#iterator"><span class="post-toc-text">iterator</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2019/08/10/interview/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          interview
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2019/08/09/webperformance/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">页面性能优化</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

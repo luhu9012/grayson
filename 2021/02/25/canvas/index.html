@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>canvas | 前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="弹跳效果demo1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;    &amp;lt;">
+<meta name="keywords" content="canvas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="canvas">
+<meta property="og:url" content="https://luhu9012.github.io/2021/02/25/canvas/index.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="弹跳效果demo1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;    &amp;lt;">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-02-27T09:50:33.196Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="canvas">
+<meta name="twitter:description" content="弹跳效果demo1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;    &amp;lt;">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-canvas" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      canvas
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-02-25
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h4 id="弹跳效果demo"><a href="#弹跳效果demo" class="headerlink" title="弹跳效果demo"></a>弹跳效果demo</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;style&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;canvas width=&quot;600&quot; height=&quot;600&quot; id=&quot;canvas&quot;&gt;&lt;/canvas&gt;</span><br><span class="line">  &lt;script&gt;</span><br><span class="line">    var canvas = document.getElementById(&apos;canvas&apos;);</span><br><span class="line">var cxt = canvas.getContext(&apos;2d&apos;);</span><br><span class="line"></span><br><span class="line">var timer;</span><br><span class="line">var gravity = 0.4;</span><br><span class="line">var buffer = 0;</span><br><span class="line"></span><br><span class="line">var iStop = false;</span><br><span class="line"></span><br><span class="line">var boxes = [</span><br><span class="line">&#123;&apos;startSpeed&apos;:-8,&apos;currentSpeed&apos;:-8,&apos;boxTop&apos;:500,&apos;boxLeft&apos;:0&#125;,</span><br><span class="line">&#123;&apos;startSpeed&apos;:-10,&apos;currentSpeed&apos;:-10,&apos;boxTop&apos;:500,&apos;boxLeft&apos;:100&#125;,</span><br><span class="line">&#123;&apos;startSpeed&apos;:-20,&apos;currentSpeed&apos;:-20,&apos;boxTop&apos;:500,&apos;boxLeft&apos;:200&#125;,</span><br><span class="line">// &#123;&apos;startSpeed&apos;:-10,&apos;currentSpeed&apos;:-10,&apos;boxTop&apos;:500,&apos;boxLeft&apos;:300&#125;,</span><br><span class="line">// &#123;&apos;startSpeed&apos;:-20,&apos;currentSpeed&apos;:-20,&apos;boxTop&apos;:500,&apos;boxLeft&apos;:400&#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">function draw()&#123;</span><br><span class="line">for(var i=0; i&lt;boxes.length; i++)&#123;</span><br><span class="line">boxes[i].currentSpeed += gravity;</span><br><span class="line">boxes[i].boxTop += boxes[i].currentSpeed;</span><br><span class="line">if(boxes[i].boxTop &gt; 500)&#123;</span><br><span class="line">boxes[i].boxTop -= boxes[i].currentSpeed;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cxt.fillRect(boxes[i].boxLeft, boxes[i].boxTop, 100, 100);</span><br><span class="line">if(boxes[i].boxTop &gt;= 500)&#123;</span><br><span class="line">boxes[i].startSpeed += buffer;</span><br><span class="line">boxes[i].currentSpeed = boxes[i].startSpeed;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function erase()&#123;</span><br><span class="line">cxt.clearRect(0, 0, 600, 600);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">window.requestAnimationFrame =</span><br><span class="line">window.requestAnimationFrame ||</span><br><span class="line">window.mozRequestAnimationFrame ||</span><br><span class="line">window.webkitRequestAnimationFrame ||</span><br><span class="line">window.msRequestAnimationFrame;</span><br><span class="line"></span><br><span class="line">window.cancelRequestAnimationFrame =</span><br><span class="line">window.cancelRequestAnimationFrame ||</span><br><span class="line">window.mozCancelRequestAnimationFrame ||</span><br><span class="line">window.webkitCancelRequestAnimationFrame ||</span><br><span class="line">window.msCancelRequestAnimationFrame;</span><br><span class="line"></span><br><span class="line">function animate() &#123;</span><br><span class="line">erase();</span><br><span class="line">draw();</span><br><span class="line"></span><br><span class="line">if(iStop)&#123;</span><br><span class="line">cancelRequestAnimationFrame(timer);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">timer = requestAnimationFrame(animate);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">animate();</span><br><span class="line">  &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="圆环旋转效果"><a href="#圆环旋转效果" class="headerlink" title="圆环旋转效果"></a>圆环旋转效果</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;</span><br><span class="line">  &lt;title&gt;Document&lt;/title&gt;</span><br><span class="line">  &lt;style&gt;</span><br><span class="line">    #myCanvas &#123;</span><br><span class="line">      border: 1px solid skyblue;</span><br><span class="line">      background: rgba(12, 30, 78, 0.8);</span><br><span class="line">    &#125;</span><br><span class="line">  &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;canvas id=&quot;myCanvas&quot; width=&quot;800&quot; height=&quot;800&quot;&gt;</span><br><span class="line">    您的浏览器不支持 Canvas</span><br><span class="line">  &lt;/canvas&gt;</span><br><span class="line"></span><br><span class="line">  &lt;script&gt;</span><br><span class="line">    var item1 = null,</span><br><span class="line">      item2 = null,</span><br><span class="line">      item3 = null;</span><br><span class="line">    var _W = _H = 800;</span><br><span class="line">    var speed = 0.6, // 旋转速度, 正值顺时针</span><br><span class="line">      radius = 30; // 图形半径</span><br><span class="line">    var canvas = document.getElementById(&apos;myCanvas&apos;);</span><br><span class="line">    var ctx = canvas.getContext(&apos;2d&apos;);</span><br><span class="line">    canvas.width = _W;</span><br><span class="line">    canvas.height = _H;</span><br><span class="line">    var img = new Image();</span><br><span class="line">    img.src = &apos;./test3.png&apos;;</span><br><span class="line">    img.onload = function() &#123;</span><br><span class="line">      // item1 = new CircleItem(img, radius, 400, 400, speed); // 图像, 图圆形长半径, 显示中心x,显示中心y, 旋转速度</span><br><span class="line">      item2 = new CircleItem(img, radius - 10, 400, 400, -speed*1.5);</span><br><span class="line">      // item3 = new CircleItem(img, radius - 150, 400, 400, speed*2);</span><br><span class="line">    &#125;;</span><br><span class="line">    var CircleItem = function(img, r, x, y, speed) &#123;</span><br><span class="line">      this._r = r; // 半径</span><br><span class="line">      this._img = img; // 图片</span><br><span class="line">      this._w = r * 2; // 缓存canvas宽度</span><br><span class="line">      this._h = r * 2; // 缓存canvas高度</span><br><span class="line">      this._x = x; // 外部绘制中心</span><br><span class="line">      this._y = y; // 外部绘制中心</span><br><span class="line">      this._speed = speed;</span><br><span class="line">      this.rectCenterPoint = &#123;</span><br><span class="line">        x: this._r,</span><br><span class="line">        y: this._r</span><br><span class="line">      &#125;; // 内部圆心</span><br><span class="line">      this.cache();</span><br><span class="line">    &#125;</span><br><span class="line">    CircleItem.prototype.draw = function() &#123;</span><br><span class="line">      this.rotate();</span><br><span class="line">      ctx.scale(1, 0.3);</span><br><span class="line">      ctx.drawImage(this.cacheCanvas, 0, 0, this._w, this._h, this._x - this._r, this._y - this._r, this._r * 2, this._r * 2);</span><br><span class="line">      ctx.scale(1, 1 / 0.3);</span><br><span class="line">    &#125;;</span><br><span class="line">    CircleItem.prototype.cache = function() &#123;</span><br><span class="line">      this.cacheCanvas = document.createElement(&quot;canvas&quot;);</span><br><span class="line">      this.cacheCtx = this.cacheCanvas.getContext(&quot;2d&quot;);</span><br><span class="line">      this.cacheCanvas.width = this._w;</span><br><span class="line">      this.cacheCanvas.height = this._h;</span><br><span class="line">      this.cacheCtx.save();</span><br><span class="line">      this.cacheCtx.beginPath();</span><br><span class="line">      this.cacheCtx.drawImage(this._img, 0, 0, this._r * 2, this._r * 2);</span><br><span class="line">      this.cacheCtx.closePath();</span><br><span class="line">      this.cacheCtx.restore();</span><br><span class="line">    &#125;;</span><br><span class="line">    CircleItem.prototype.rotate = function() &#123;</span><br><span class="line">      this.cacheCtx.clearRect(0, 0, this._w, this._h);</span><br><span class="line">      this.cacheCtx.translate(this.rectCenterPoint.x, this.rectCenterPoint.y);</span><br><span class="line">      this.cacheCtx.rotate(this._speed * Math.PI / 180);</span><br><span class="line">      this.cacheCtx.translate(-this.rectCenterPoint.x, -this.rectCenterPoint.y);</span><br><span class="line">      this.cacheCtx.drawImage(this._img, 0, 0, this._r * 2, this._r * 2);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    function animate() &#123;</span><br><span class="line">      ctx.clearRect(0, 0, _W, _H);</span><br><span class="line">      // item1 &amp;&amp; item1.draw();</span><br><span class="line">      item2 &amp;&amp; item2.draw();</span><br><span class="line">      // item3 &amp;&amp; item3.draw();</span><br><span class="line">      requestAnimationFrame(animate);</span><br><span class="line">    &#125;</span><br><span class="line">    animate();</span><br><span class="line">  &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="圆环旋转-位置弹跳"><a href="#圆环旋转-位置弹跳" class="headerlink" title="圆环旋转+位置弹跳"></a>圆环旋转+位置弹跳</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;</span><br><span class="line">  &lt;title&gt;Document&lt;/title&gt;</span><br><span class="line">  &lt;style&gt;</span><br><span class="line">    #myCanvas &#123;</span><br><span class="line">      border: 1px solid skyblue;</span><br><span class="line">      background: rgba(12, 30, 78, 0.8);</span><br><span class="line">    &#125;</span><br><span class="line">  &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;canvas id=&quot;myCanvas&quot; width=&quot;800&quot; height=&quot;800&quot;&gt;</span><br><span class="line">    您的浏览器不支持 Canvas</span><br><span class="line">  &lt;/canvas&gt;</span><br><span class="line"></span><br><span class="line">  &lt;script&gt;</span><br><span class="line">    var item1 = null,</span><br><span class="line">      item2 = null,</span><br><span class="line">      item3 = null;</span><br><span class="line">    var _W = _H = 800;</span><br><span class="line">    var speed = 0.6, // 旋转速度, 正值顺时针</span><br><span class="line">      radius = 40; // 图形半径</span><br><span class="line">    var canvas = document.getElementById(&apos;myCanvas&apos;);</span><br><span class="line">    var ctx = canvas.getContext(&apos;2d&apos;);</span><br><span class="line">    canvas.width = _W;</span><br><span class="line">    canvas.height = _H;</span><br><span class="line">    var img = new Image();</span><br><span class="line">    img.src = &apos;./test3.png&apos;;</span><br><span class="line">    img.onload = function() &#123;</span><br><span class="line">      // item1 = new CircleItem(img, radius, 400, 400, speed); // 图像, 图圆形长半径, 显示中心x,显示中心y, 旋转速度</span><br><span class="line">      item2 = new CircleItem(img, radius - 10, 400, 400, -speed*1.5);</span><br><span class="line">      // item3 = new CircleItem(img, radius - 150, 400, 400, speed*2);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    var position_selected</span><br><span class="line">    var img2 = new Image();</span><br><span class="line">    // img2.src = &apos;./position_selected.svg&apos;;</span><br><span class="line">    img2.src = &apos;./position.png&apos;;</span><br><span class="line">    img2.onload = function() &#123;</span><br><span class="line">      position_selected = img2</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">          var timer;</span><br><span class="line">          var gravity = 0.2;</span><br><span class="line">          var buffer = 0;</span><br><span class="line"></span><br><span class="line">          var iStop = false;</span><br><span class="line"></span><br><span class="line">          var boxes = &#123;&apos;startSpeed&apos;:-2,&apos;currentSpeed&apos;:-2,&apos;boxTop&apos;:600,&apos;boxLeft&apos;:0,maxtop:600&#125;</span><br><span class="line"></span><br><span class="line">          function drawIcon()&#123;</span><br><span class="line">          boxes.currentSpeed += gravity;</span><br><span class="line">          boxes.boxTop += boxes.currentSpeed;</span><br><span class="line">          if(boxes.boxTop &gt; boxes.maxtop)&#123;</span><br><span class="line">          boxes.boxTop -= boxes.currentSpeed;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          // cxt.fillRect(boxes.boxLeft, boxes.boxTop, 100, 100);</span><br><span class="line">          ctx.drawImage(</span><br><span class="line">            position_selected, // 规定要使用的图像、画布或视频。</span><br><span class="line">            400 +boxes.boxLeft-radius/2+5, // -10 与 -20 是考虑图标本身的大小对绘制位置的影响</span><br><span class="line">            boxes.boxTop-radius*2-400-30, // 开始的 x,y 坐标位置。</span><br><span class="line">              30,</span><br><span class="line">              30 // 剪裁大小x,y</span><br><span class="line">            )</span><br><span class="line">          if(boxes.boxTop &gt;= boxes.maxtop)&#123;</span><br><span class="line">            boxes.startSpeed += buffer;</span><br><span class="line">            boxes.currentSpeed = boxes.startSpeed;</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    var CircleItem = function(img, r, x, y, speed) &#123;</span><br><span class="line">      this._r = r; // 半径</span><br><span class="line">      this._img = img; // 图片</span><br><span class="line">      this._w = r * 2; // 缓存canvas宽度</span><br><span class="line">      this._h = r * 2; // 缓存canvas高度</span><br><span class="line">      this._x = x; // 外部绘制中心</span><br><span class="line">      this._y = y; // 外部绘制中心</span><br><span class="line">      this._speed = speed;</span><br><span class="line">      this.rectCenterPoint = &#123;</span><br><span class="line">        x: this._r,</span><br><span class="line">        y: this._r</span><br><span class="line">      &#125;; // 内部圆心</span><br><span class="line">      this.cache();</span><br><span class="line">    &#125;</span><br><span class="line">    CircleItem.prototype.draw = function() &#123;</span><br><span class="line">      this.rotate();</span><br><span class="line">      ctx.scale(1, 0.3);</span><br><span class="line">      ctx.drawImage(this.cacheCanvas, 0, 0, this._w, this._h, this._x - this._r, this._y - this._r, this._r * 2, this._r * 2);</span><br><span class="line">      ctx.scale(1, 1 / 0.3);</span><br><span class="line">    &#125;;</span><br><span class="line">    CircleItem.prototype.cache = function() &#123;</span><br><span class="line">      this.cacheCanvas = document.createElement(&quot;canvas&quot;);</span><br><span class="line">      this.cacheCtx = this.cacheCanvas.getContext(&quot;2d&quot;);</span><br><span class="line">      this.cacheCanvas.width = this._w;</span><br><span class="line">      this.cacheCanvas.height = this._h;</span><br><span class="line">      this.cacheCtx.save();</span><br><span class="line">      this.cacheCtx.beginPath();</span><br><span class="line">      this.cacheCtx.drawImage(this._img, 0, 0, this._r * 2, this._r * 2);</span><br><span class="line">      this.cacheCtx.closePath();</span><br><span class="line">      this.cacheCtx.restore();</span><br><span class="line">    &#125;;</span><br><span class="line">    CircleItem.prototype.rotate = function() &#123;</span><br><span class="line">      this.cacheCtx.clearRect(0, 0, this._w, this._h);</span><br><span class="line">      this.cacheCtx.translate(this.rectCenterPoint.x, this.rectCenterPoint.y);</span><br><span class="line">      this.cacheCtx.rotate(this._speed * Math.PI / 180);</span><br><span class="line">      this.cacheCtx.translate(-this.rectCenterPoint.x, -this.rectCenterPoint.y);</span><br><span class="line">      this.cacheCtx.drawImage(this._img, 0, 0, this._r * 2, this._r * 2);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    function animate() &#123;</span><br><span class="line">      ctx.clearRect(0, 0, _W, _H);</span><br><span class="line">      // item1 &amp;&amp; item1.draw();</span><br><span class="line">      item2 &amp;&amp; item2.draw();</span><br><span class="line">      // item3 &amp;&amp; item3.draw();</span><br><span class="line">      position_selected &amp;&amp; drawIcon()</span><br><span class="line">      requestAnimationFrame(animate);</span><br><span class="line">    &#125;</span><br><span class="line">    animate();</span><br><span class="line">  &lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年02月27日 17:50</p>
+        <p>原始链接： <a class="post-url" href="/2021/02/25/canvas/" title="canvas">https://luhu9012.github.io/2021/02/25/canvas/</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/2021/02/25/canvas/&title=《canvas》 — 前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/2021/02/25/canvas/&title=《canvas》 — 前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/2021/02/25/canvas/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《canvas》 — 前端笔记&url=https://luhu9012.github.io/2021/02/25/canvas/&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/2021/02/25/canvas/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/2021/02/25/canvas/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/canvas/" class="color2">canvas</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#弹跳效果demo"><span class="post-toc-text">弹跳效果demo</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#圆环旋转效果"><span class="post-toc-text">圆环旋转效果</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#圆环旋转-位置弹跳"><span class="post-toc-text">圆环旋转+位置弹跳</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2021/04/14/interviewQA/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          interviewQA
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2021/02/23/cssdemo/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">css demo</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>前端工程化 | 前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="vuecli3 中调试webpack： node –inspect-brk node_modules/@vue/cli-service/bin/vue-cli-service.js serve webpack 测速插件 speed-measure-webpack-pluginwebpack bundle 文件分析插件：webpack-bundle-analyzervue-cli4 report:">
+<meta property="og:type" content="website">
+<meta property="og:title" content="前端工程化">
+<meta property="og:url" content="https://luhu9012.github.io/engineering/index.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="vuecli3 中调试webpack： node –inspect-brk node_modules/@vue/cli-service/bin/vue-cli-service.js serve webpack 测速插件 speed-measure-webpack-pluginwebpack bundle 文件分析插件：webpack-bundle-analyzervue-cli4 report:">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-02T07:40:17.552Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端工程化">
+<meta name="twitter:description" content="vuecli3 中调试webpack： node –inspect-brk node_modules/@vue/cli-service/bin/vue-cli-service.js serve webpack 测速插件 speed-measure-webpack-pluginwebpack bundle 文件分析插件：webpack-bundle-analyzervue-cli4 report:">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      前端工程化
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-03-31
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+            
+            <p>vuecli3 中调试webpack： node –inspect-brk node_modules/@vue/cli-service/bin/vue-cli-service.js serve</p>
+<p>webpack 测速插件 speed-measure-webpack-plugin<br>webpack bundle 文件分析插件：webpack-bundle-analyzer<br>vue-cli4 report: npm run build – –report</p>
+<h3 id="webpack事件流机制"><a href="#webpack事件流机制" class="headerlink" title="webpack事件流机制"></a>webpack事件流机制</h3><p><a href="https://www.goyth.com/2018/12/10/webpackFlow/" target="_blank" rel="noopener">webpack 打包构建流程分析整理</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzI0MTUxOTE5NQ==&mid=2247484030&idx=1&sn=d630d4b3995bbfd50f99e781074acfeb" target="_blank" rel="noopener">一文掌握Webpack编译流程</a></p>
+<h4 id="打包速度提升"><a href="#打包速度提升" class="headerlink" title="打包速度提升"></a>打包速度提升</h4><p><a href="https://webpack.docschina.org/guides/build-performance/#bootstrap" target="_blank" rel="noopener">官方构建性能</a></p>
+<p>webpack4 速度提升插件</p>
+<ol>
+<li>ParallelUglifyPlugin</li>
+<li>happyPack (不支持vue-loader，vue-cli默认自带thread-loader)</li>
+<li>dll</li>
+</ol>
+<p>基于vue-cli的webpack优化：</p>
+<p>1、优化模块查找路径<br>2、剔除不必要的无用的模块</p>
+<ul>
+<li>通过modules指定查找第三方模块的路径。</li>
+<li>通过alias指定第三方模块直接查找到打包构建好的压缩js文件。</li>
+<li>通过module指定noparse，对第三方模块不再进行分析依赖。<br>3、设置缓存：缓存loader的执行结果(cacheDirectory/cache-loader)<br>4、设置多线程：HappyPack/thread-loader<br>5、dllplugin提取第三方库</li>
+</ul>
+<h4 id="版本差异"><a href="#版本差异" class="headerlink" title="版本差异"></a>版本差异</h4><p>webpack 4于2018年2月发布<br>Webpack 5.0.0于2020年10月10日发布</p>
+<h4 id="webpack5-重点内容"><a href="#webpack5-重点内容" class="headerlink" title="webpack5 重点内容"></a>webpack5 重点内容</h4><ol>
+<li><p>通过持久化缓存提高构建性能。</p>
+</li>
+<li><p>使用更好的算法和默认值来改善长期缓存。</p>
+</li>
+<li><p>通过更好的Tree Shaking和代码生成来改善bundle大小。</p>
+</li>
+<li><p>清理处于怪异状态的内部结构，同时在v4中实现功能而不引入任何重大更改。</p>
+</li>
+<li><p>引入一些重大变更，为将来的功能做准备，使我们能够尽可能长时间地使用v5。</p>
+</li>
+<li><p>v4中所有deprecated的项目均已删除，也有一些v4中没有被警告deprecation的变更，比如 IgnorePlugin 和 BannerPlugin，现在必须传递一个参数（可以是对象，字符串或函数）</p>
+</li>
+<li><p>弃用的语法：require.include 已被弃用，使用时默认会发出警告。然这个行为可以通过 Rule.parser.requireInclude 来把这个语法改成 allowed, deprecated 或者 disabled。</p>
+</li>
+<li><p>自动删除Node.js Polyfills：早期，webpack的目标是允许在浏览器中运行大多数Node.js模块，但是模块格局发生了变化，现在许多模块用途的编写主要是用于浏览器。webpack &lt;= 4带有许多Node.js核心模块的polyfill，一旦模块使用了任何核心模块（例如crypto模块），这些模块就会自动应用。这个时候再自动 Polyfills 一些 Node 模块（例如 crypto）无疑会增加打包体积，在 Webpack5 之后去掉了这个自动行为。</p>
+</li>
+<li><p>持久缓存：现在有一个缓存cache配置，cache生成的 webpack 模块和 chunk，来改善构建速度。它是可选的，可以通过以下配置启用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">  cache: &#123;</span><br><span class="line">    // 1. 将缓存类型设置为文件系统</span><br><span class="line">    type: &apos;filesystem&apos;,</span><br><span class="line"></span><br><span class="line">    buildDependencies: &#123;</span><br><span class="line">      // 2. 将你的 config 添加为 buildDependency，以便在改变 config 时获得缓存无效</span><br><span class="line">      // __filename变量获取当前文件的带有完整绝对路径的文件名</span><br><span class="line">      config: [__filename],</span><br><span class="line"></span><br><span class="line">      // 3. 如果你有其他的东西被构建依赖，你可以在这里添加它们</span><br><span class="line">      // 注意，webpack、加载器和所有从你的配置中引用的模块都会被自动添加</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>cache 会在开发模式被设置成 type: ‘memory’ 而且在 生产模式中禁用memory。 cache: true 与 cache: { type: ‘memory’ } 配置作用一致。 传入 false 会禁用缓存</p>
+<p>缓存将默认存储在 node_modules/.cache/webpack（当使用 node_modules 时）或 .yarn/.cache/webpack（当使用 Yarn Plug’nPlay 时）中。 当所有的插件都正确处理缓存时，你可能永远都不需要手动删除它</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年04月02日 15:40</p>
+        <p>原始链接： <a class="post-url" href="/engineering/index.html" title="前端工程化">https://luhu9012.github.io/engineering/index.html</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/engineering/&title=《前端工程化》 — 前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/engineering/&title=《前端工程化》 — 前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/engineering/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端工程化》 — 前端笔记&url=https://luhu9012.github.io/engineering/&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/engineering/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/engineering/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#webpack事件流机制"><span class="post-toc-text">webpack事件流机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#打包速度提升"><span class="post-toc-text">打包速度提升</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#版本差异"><span class="post-toc-text">版本差异</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#webpack5-重点内容"><span class="post-toc-text">webpack5 重点内容</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

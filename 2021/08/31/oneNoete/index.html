@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="js相关：使用avoid(0) 替换undefined，因为undefined是一个变量而不是关键字，在低版本ie浏览器会被重写，在立即执行函数内也可以被重写，avoid不会被重写，且无论avoid后边跟的是什么都会返回undefined，推荐使用avoid来获取undefined 比较浮点数方法：console.log( Math.abs(0.1 + 0.2 - 0.3) &amp;lt;= Numbe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端笔记">
+<meta property="og:url" content="https://luhu9012.github.io/2021/08/31/oneNoete/index.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="js相关：使用avoid(0) 替换undefined，因为undefined是一个变量而不是关键字，在低版本ie浏览器会被重写，在立即执行函数内也可以被重写，avoid不会被重写，且无论avoid后边跟的是什么都会返回undefined，推荐使用avoid来获取undefined 比较浮点数方法：console.log( Math.abs(0.1 + 0.2 - 0.3) &amp;lt;= Numbe">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-08-31T08:59:22.554Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端笔记">
+<meta name="twitter:description" content="js相关：使用avoid(0) 替换undefined，因为undefined是一个变量而不是关键字，在低版本ie浏览器会被重写，在立即执行函数内也可以被重写，avoid不会被重写，且无论avoid后边跟的是什么都会返回undefined，推荐使用avoid来获取undefined 比较浮点数方法：console.log( Math.abs(0.1 + 0.2 - 0.3) &amp;lt;= Numbe">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-oneNoete" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="js相关："><a href="#js相关：" class="headerlink" title="js相关："></a>js相关：</h3><p>使用avoid(0) 替换undefined，因为undefined是一个变量而不是关键字，在低版本ie浏览器会被重写，在立即执行函数内也可以被重写，avoid不会被重写，且无论avoid后边跟的是什么都会返回undefined，推荐使用avoid来获取undefined</p>
+<p>比较浮点数方法：console.log( Math.abs(0.1 + 0.2 - 0.3) &lt;= Number.EPSILON); //<br>检查等式左右两边差的绝对值是否小于最小精度</p>
+<p>转化为原始值（number，string）（拆箱转换）：对象先调用valueof 再调用tostring 如果返回的不是基本数据类型就会报错typeerror，String对象拆箱时优先调用tostring再调用valueof</p>
+<h2 id="简历辅助，亮点"><a href="#简历辅助，亮点" class="headerlink" title="简历辅助，亮点"></a>简历辅助，亮点</h2><pre><code>1. 节流防抖为性能
+2. 动态表单组件为复用
+3. 表格组件封装提效，以及element-ui封装表格列render函数（函数式组件）
+4. 整洁架构分离表现层与业务层，业务独立框架应用
+5. Webpack serve+mock+rap2调试提效
+6. lru缓存算法实现前端缓存？，keep-alive
+7. 埋点监控
+8. 页面性能优化？，wabpack优化？优化指标？
+9. canvas地图控件封装通用业务逻辑，动画类引入
+10. 1-18n国际化，子系统抽取
+11. 子系统单点登录实现
+12. 多主题打包工具脚本？
+13. 快速定位和理顺一些需求逻辑和实现思路？
+14. promise链取消？思路1：在promise中加入cancel对象https://juejin.im/post/5a32705a6fb9a045117127fa，思路2：promise.race加cancel对象实现https://blog.csdn.net/l908825925/article/details/80619821
+15. 信号、位置，弹框 图标？
+16. Clear architecture运用实践？
+17. 插拔式组件，权限控制菜单路由？
+18. 搭建企业组件库：项目A复制粘贴项目B的组件，https://segmentfault.com/a/1190000022000712
+
+19. 解决v-html指令潜在的xss攻击(https://juejin.cn/post/6844903918518927367)
+20. docker对前端提效
+21. webrtc中间件
+22. 前端监控中间件，埋点，性能监控，错误监控
+23. 页面性能优化（工程、网络、浏览器）
+24. Css 图标，动画、变量，预编译
+25. 点断CI CD webhook+gitlab+jekins
+26. Vue-admin: 页面权限控制（动态权限路由+路由守卫），组件权限控制（v-permission）
+27. 权限验证：页面权限（动态路由），组件/指令权限（v-permission）
+28. Svg sprite 图标</code></pre><p>优势：</p>
+<pre><code>1. 工作态度端正，学会换位思考，处理问题先找自己问题，如果不是自己的问题，尽量帮他人解决问题或提供解决方案。
+心态方面，不急不躁，本着解决问题的方式去沟通，讨论过程中，去做正确的事，而不是推卸责任或者推诿工作。
+定位&amp;调试问题的能力
+搜索资料的能力，google党，英语六级，习惯一手资料，阅读英文基本无障碍。
+五年前端，我觉得我的优势是，不给自己停下来，不停学习新知识和框架，而且我觉得最重要的学习方法是：看各种网站上的视频教程，模仿学习别人是最快的。
+，可以脱离代码层面去考虑问题，更能理解什么叫99%的设计1%的代码，不太会纠结于代码的实现本身
+虽然开发以前端为主（主要是爱好），但我理解前后端的整套技术方案，能和后端流畅沟通，甚至给出自己的建议
+有相对扎实的编程和逻辑能力，嗯我身边有些前端确实逻辑一复杂就乱了</code></pre><p>随着公司的业务发展，公司内部开始衍生出很多的B2C系统、后台系统，前端部门也疲于应对越来越多同质化的项目，这些项目在很多基础模块层、源代码存在不小的相似，甚至存在相似的业务模块。<br>笔者曾经所在的一个电商团队，前端成员基本每个人多做过登录注册、购物车、支付、微信登录…… 大量重复的业务代码。由于组内技术没有强制规范<br>本质上相同的东西，重复的去code就显得浪费.<br>分析这些问题发现：<br>日渐增多的业务场景需求<br>前端资源有限，无法支持所有项目的快速迭代<br>公司内部诸多产品业务混乱、体验不统一<br>于是开发底层的工具去服务不同业务就很有必要：<br>设计一套公司内部的基础组件库支撑各个前端项目，提升项目和业务的可用性和一致性。<br>一个前端团队拥有大量的业务场景和业务代码，相似的页面和代码层出不穷，如何管理和抽象这些相似的代码和模块，绝大多数团队会遇到这样的问题。 不断的拷代码？ 修改代码？还是抽象成组件？显然后者更高效。所以在多项目存在高度的可控、底层依赖的情况下，前端实现组件库是最好的选择。<br>组件化，又或者组件抽离的目的是为了功能共享方便维护，其能够带来的好处是少写代码，统一管理、统一维护。一套基础组件代码千锤百炼精而又精，从而起到快速支撑业务迭代，提升开发效率的目的。</p>
+<p>来自 <a href="https://blog.csdn.net/weixin_33893473/article/details/88624608" target="_blank" rel="noopener">https://blog.csdn.net/weixin_33893473/article/details/88624608</a> </p>
+<h2 id="前端监控"><a href="#前端监控" class="headerlink" title="前端监控"></a>前端监控</h2><p>项目介绍：<br>    目的：监测前端页面稳定性，pv uv数据为产品优化提供依据<br>    一个前端sdk上报性能数据，异常数据，uv,pv，用户轨迹等<br>    egg后台接收上报数据，对数据整理聚合，通过echarts图表展示<br>    自己全程参与开发，需求，调研，sdk开发，后台开发，部署上线<br>功能模块：<br>前端sdk:  资源异常代码异常监听，重写xhr,fetch  ,navigate.sendBecon和图片上报，用户轨迹收集，配置信息从后台设置<br>后台监测系统：restful api编写，redis缓存，mongoose文档存储，数据聚合，定时任务<br>亮点：<br>1，非常实用的工具，可定制化开发：页面稳定性监控，产品迭代优化的数据依据<br>2，前端数据收集到逐步变化成一个监测系统的过程，即实现自动化又保持足够高的自由度，编写使用文档，也是对整过过程的review</p>
+<h2 id="整洁架构"><a href="#整洁架构" class="headerlink" title="整洁架构"></a>整洁架构</h2><p>问题：<br>业务逻辑、引用绑定了框架<br>view层过重<br>ui层代码与业务耦合太重，ui变更太快，但业务逻辑不怎么变更，每次ui修改后不得不修改很多代码</p>
+<p>整洁架构特点：<br>框架无关性，框架只是个工具，系统不能适应于框架<br>可被测试性：业务逻辑脱离与ui，数据库等外部元素进行测试<br>UI无关性，不修改系统其他部分，就可以变更ui<br>数据库无关性。业务逻辑与数据库之间需要进行解耦，我们可以随意切换 LocalStroage、IndexedDB、Web SQL。</p>
+<p>注重业务逻辑从框架与UI中抽离！！！</p>
+<h2 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h2><p>Npm 脚手架开发  done<br>按需加载的实现原理<br>babel有哪些使用<br>HMRS实现原理</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年08月31日 16:59</p>
+        <p>原始链接： <a class="post-url" href="/2021/08/31/oneNoete/" title="">https://luhu9012.github.io/2021/08/31/oneNoete/</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/2021/08/31/oneNoete/&title=前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/2021/08/31/oneNoete/&title=前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/2021/08/31/oneNoete/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=前端笔记&url=https://luhu9012.github.io/2021/08/31/oneNoete/&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/2021/08/31/oneNoete/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/2021/08/31/oneNoete/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#js相关："><span class="post-toc-text">js相关：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简历辅助，亮点"><span class="post-toc-text">简历辅助，亮点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前端监控"><span class="post-toc-text">前端监控</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#整洁架构"><span class="post-toc-text">整洁架构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#todo"><span class="post-toc-text">todo</span></a>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2021/07/19/链表/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title"></span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

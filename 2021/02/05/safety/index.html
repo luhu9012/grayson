@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>前端安全 | 前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="XSSeggjs安全vuejs安全 Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全。 漏洞总结 在 HTML 中内嵌的文本中，恶意内容以 script 标签形成注入。 在内联的 JavaScr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端安全">
+<meta property="og:url" content="https://luhu9012.github.io/2021/02/05/safety/index.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="XSSeggjs安全vuejs安全 Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全。 漏洞总结 在 HTML 中内嵌的文本中，恶意内容以 script 标签形成注入。 在内联的 JavaScr">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-10T06:31:05.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端安全">
+<meta name="twitter:description" content="XSSeggjs安全vuejs安全 Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全。 漏洞总结 在 HTML 中内嵌的文本中，恶意内容以 script 标签形成注入。 在内联的 JavaScr">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-safety" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      前端安全
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-02-05
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a><a href="https://tech.meituan.com/2018/09/27/fe-security.html" target="_blank" rel="noopener">XSS</a></h3><p><a href="https://eggjs.org/zh-cn/core/security.html" target="_blank" rel="noopener">eggjs安全</a><br><a href="https://cn.vuejs.org/v2/guide/security.html" target="_blank" rel="noopener">vuejs安全</a></p>
+<p>Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全。</p>
+<h4 id="漏洞总结"><a href="#漏洞总结" class="headerlink" title="漏洞总结"></a>漏洞总结</h4><ul>
+<li>在 HTML 中内嵌的文本中，恶意内容以 script 标签形成注入。</li>
+<li>在内联的 JavaScript 中，拼接的数据突破了原本的限制（字符串，变量，方法名等）。</li>
+<li>在标签属性中，恶意内容包含引号，从而突破属性值的限制，注入其他属性或者标签。</li>
+<li>在标签的 href、src 等属性中，包含 javascript: 等可执行代码。</li>
+<li>在 onload、onerror、onclick 等事件中，注入不受控制代码。</li>
+<li>在 style 属性和标签中，包含类似 background-image:url(“javascript:…”); 的代码（新版本浏览器已经可以防范）。</li>
+<li>在 style 属性和标签中，包含类似 expression(…) 的 CSS 表达式代码（新版本浏览器已经可以防范）。<br>总之，如果开发者没有将用户输入的文本进行合适的过滤，就贸然插入到 HTML 中，这很容易造成注入漏洞。攻击者可以利用漏洞，构造出恶意的代码指令，进而利用恶意代码危害数据安全。</li>
+</ul>
+<h4 id="xss-类型"><a href="#xss-类型" class="headerlink" title="xss 类型"></a>xss 类型</h4><ul>
+<li><p>存储型<br>存储型 XSS 的攻击步骤：</p>
+<p>  攻击者将恶意代码提交到目标网站的数据库中。<br>  用户打开目标网站时，网站服务端将恶意代码从数据库取出，拼接在 HTML 中返回给浏览器。<br>  用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。<br>  恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。<br>  这种攻击常见于带有用户保存数据的网站功能，如论坛发帖、商品评论、用户私信等。</p>
+</li>
+<li><p>反射型<br>反射型 XSS 的攻击步骤：</p>
+<p>  攻击者构造出特殊的 URL，其中包含恶意代码。<br>  用户打开带有恶意代码的 URL 时，网站服务端将恶意代码从 URL 中取出，拼接在 HTML 中返回给浏览器。<br>  用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。<br>  恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。<br>  反射型 XSS 跟存储型 XSS 的区别是：存储型 XSS 的恶意代码存在数据库里，反射型 XSS 的恶意代码存在 URL 里。</p>
+<p>  反射型 XSS 漏洞常见于通过 URL 传递参数的功能，如网站搜索、跳转等。</p>
+<p>  由于需要用户主动打开恶意的 URL 才能生效，攻击者往往会结合多种手段诱导用户点击。</p>
+<p>  POST 的内容也可以触发反射型 XSS，只不过其触发条件比较苛刻（需要构造表单提交页面，并引导用户点击），所以非常少见。</p>
+</li>
+<li><p>DOM型（前端）<br>  DOM 型 XSS 的攻击步骤：</p>
+<p>  攻击者构造出特殊的 URL，其中包含恶意代码。<br>  用户打开带有恶意代码的 URL。<br>  用户浏览器接收到响应后解析执行，前端 JavaScript 取出 URL 中的恶意代码并执行。<br>  恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。<br>  DOM 型 XSS 跟前两种 XSS 的区别：DOM 型 XSS 攻击中，取出和执行恶意代码由浏览器端完成，属于前端 JavaScript 自身的安全漏洞，而其他两种 XSS 都属于服务端的安全漏洞。</p>
+</li>
+<li><p>jsonp 与xss<br> callback 如果是script标签或其他恶意代码会导致xss-》过滤callback函数名一级json输出<br> 返回数据的Content-Type为application / javascript，在IE等浏览器一样可以解析html导致xss</p>
+</li>
+</ul>
+<h4 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h4><p>XSS 攻击有两大要素：</p>
+<ol>
+<li>攻击者提交恶意代码。-&gt;防止html中出现注入</li>
+<li>浏览器执行恶意代码。-&gt; 防止执行javascript时执行恶意代码</li>
+</ol>
+<p>预防存储型和反射型 XSS 攻击：</p>
+<ol>
+<li>改成纯前端渲染，把代码和数据分隔开： 前端明确告诉浏览器内容，如用innertext,setAttribute,模板引擎等，石浏览器能够正确执行预期内容。但前端要注意防范Dom xss</li>
+<li>对 HTML 做充分转义：成熟的转义库，针对不同的上下文（html标签内文本,标签属性，css属性，css url, url, 内联js等）做对应的转义</li>
+</ol>
+<p>预防 DOM 型 XSS 攻击：<br>DOM 型 XSS 攻击，实际上就是网站前端 JavaScript 代码本身不够严谨，把不可信的数据当作代码执行了。<br>在使用 .innerHTML、.outerHTML、document.write() 时要特别小心，不要把不可信的数据作为 HTML 插到页面上，而应尽量使用 .textContent、.setAttribute() 等。<br>如果用 Vue/React 技术栈，并且不使用 v-html/dangerouslySetInnerHTML 功能，就在前端 render 阶段避免 innerHTML、outerHTML 的 XSS 隐患。<br>DOM 中的内联事件监听器，如 location、onclick、onerror、onload、onmouseover 等，<a> 标签的 href 属性，JavaScript 的 eval()、setTimeout()、setInterval() 等，都能把字符串作为代码运行。如果不可信的数据拼接到字符串中传递给这些 API，很容易产生安全隐患，请务必避免。</a></p>
+<p>其他防御手段：</p>
+<ol>
+<li>Content Security Policy 白名单制度，开发者通过配置告诉浏览器哪些外部资源可以加载和执行。可以通过服务端配置 HTTP的Content-Security-Policy头部指定，也可以在前端设置meta标签，严格的 CSP 在 XSS 的防范中可以起到以下的作用：<br>禁止加载外域代码，防止复杂的攻击逻辑。<br>禁止外域提交，网站被攻击后，用户的数据不会泄露到外域。<br>禁止内联脚本执行（规则较严格，目前发现 GitHub 使用）。<br>禁止未授权的脚本执行（新特性，Google Map 移动版在使用）。</li>
+</ol>
+<ol start="2">
+<li><p>输入内容长度控制：对于不受信任的输入，都应该限定一个合理的长度。虽然无法完全防止 XSS 发生，但可以增加 XSS 攻击的难度。</p>
+</li>
+<li><p>HTTP-only Cookie: 禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie。</p>
+</li>
+<li><p>验证码：防止脚本冒充用户提交危险操作。</p>
+</li>
+<li><p>X-Download-Options:noopen<br>默认开启，禁用 IE 下下载框Open按钮，防止 IE 下下载文件默认被打开 XSS。</p>
+</li>
+<li><p>X-Content-Type-Options:nosniff<br>禁用 IE8 自动嗅探 mime 功能例如 text/plain 却当成 text/html 渲染，特别当本站点 serve 的内容未必可信的时候。</p>
+</li>
+<li><p>X-XSS-Protection<br>IE 提供的一些 XSS 检测与防范，默认开启</p>
+</li>
+</ol>
+<p>虽然很难通过技术手段完全避免 XSS，但我们可以总结以下原则减少漏洞的产生：</p>
+<ol>
+<li>开启模板引擎自带的 HTML 转义功能。</li>
+<li>尽量不要使用 onLoad=”onload(‘‘)”、onClick=”go(‘‘)” 这种拼接内联事件的写法。在 JavaScript 中通过 .addEventlistener() 事件绑定会更安全。</li>
+<li>避免拼接 HTML 前端采用拼接 HTML 的方法比较危险，如果框架允许，使用 createElement、setAttribute 之类的方法实现。或者采用比较成熟的渲染框架，如 Vue/React 等。</li>
+<li>时刻保持警惕 在插入位置为 DOM 属性、链接等位置时，要打起精神，严加防范。</li>
+<li>增加攻击难度，降低攻击后果 通过 CSP、输入长度配置、接口安全措施等方法，增加攻击的难度，降低攻击的后果。</li>
+<li>主动检测和发现 可使用 XSS 攻击字符串和自动扫描工具寻找潜在的 XSS 漏洞。</li>
+</ol>
+<h3 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a><a href="https://tech.meituan.com//page/8.html" target="_blank" rel="noopener">CSRF</a></h3><p>CSRF（Cross-site request forgery）跨站请求伪造：攻击者诱导受害者进入第三方网站，在第三方网站中，向被攻击网站发送跨站请求。利用受害者在被攻击网站已经获取的注册凭证，绕过后台的用户验证，达到冒充用户对被攻击的网站执行某项操作的目的。</p>
+<p>一个典型的CSRF攻击有着如下的流程：</p>
+<p>受害者登录a.com，并保留了登录凭证（Cookie）。<br>攻击者引诱受害者访问了b.com。<br>b.com 向 a.com 发送了一个请求：a.com/act=xx。浏览器会默认携带a.com的Cookie。<br>a.com接收到请求后，对请求进行验证，并确认是受害者的凭证，误以为是受害者自己发送的请求。<br>a.com以受害者的名义执行了act=xx。<br>攻击完成，攻击者在受害者不知情的情况下，冒充受害者，让a.com执行了自己定义的操作。</p>
+<h4 id="几种常见攻击类型"><a href="#几种常见攻击类型" class="headerlink" title="几种常见攻击类型"></a>几种常见攻击类型</h4><ul>
+<li><p>get 请求攻击,诱导用户访问含有这个图片链接的页面后，bank.example就会收到包含受害者登录信息的一次跨域请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;http://bank.example/withdraw?account=xiaoming&amp;amount=10000&amp;for=hacker&quot;&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>post 表单类型csrf,页面自动提交表单，模拟用户完成一次post操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> &lt;form action=&quot;http://bank.example/withdraw&quot; method=POST&gt;</span><br><span class="line">    &lt;input type=&quot;hidden&quot; name=&quot;account&quot; value=&quot;xiaoming&quot; /&gt;</span><br><span class="line">    &lt;input type=&quot;hidden&quot; name=&quot;amount&quot; value=&quot;10000&quot; /&gt;</span><br><span class="line">    &lt;input type=&quot;hidden&quot; name=&quot;for&quot; value=&quot;hacker&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;script&gt; document.forms[0].submit(); &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>链接类型csrf,诱导用户点击才触发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;http://test.com/csrf/withdraw.php?amount=1000&amp;for=hacker&quot; taget=&quot;_blank&quot;&gt;</span><br><span class="line"> 重磅消息！！</span><br><span class="line"> &lt;a/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>jsonp hijacking <a href="https://blog.knownsec.com/2015/03/jsonp_security_technic/" target="_blank" rel="noopener">jsonp劫持</a><br>当某网站通过 JSONP 的方式来跨域（一般为子域）传递用户认证后的敏感信息时，攻击者可以构造恶意的 JSONP 调用页面，诱导被攻击者访问来达到截取用户敏感信息的目的</p>
+</li>
+</ul>
+<h4 id="CSRF的特点"><a href="#CSRF的特点" class="headerlink" title="CSRF的特点"></a>CSRF的特点</h4><p>攻击一般发起在第三方网站，而不是被攻击的网站。被攻击的网站无法防止攻击发生。<br>攻击利用受害者在被攻击网站的登录凭证，冒充受害者提交操作；而不是直接窃取数据。<br>整个过程攻击者并不能获取到受害者的登录凭证，仅仅是“冒用”。<br>跨站请求可以用各种方式：图片URL、超链接、CORS、Form提交等等。部分请求方式可以直接嵌入在第三方论坛、文章中，难以进行追踪。<br>CSRF通常是跨域的，因为外域通常更容易被攻击者掌控。但是如果本域下有容易被利用的功能，比如可以发图和链接的论坛和评论区，攻击可以直接在本域下进行，而且这种攻击更加危险。</p>
+<h4 id="csrf防护策略"><a href="#csrf防护策略" class="headerlink" title="csrf防护策略"></a>csrf防护策略</h4><p>同源检测《双重cookie《token验证《samesite</p>
+<ul>
+<li><p>同源检测,禁止外域向本站发起请求，常用Origin Header、Referer Header判断外域<br>可靠性 Origin&gt;referer<br>Origin不存在的情况：302重定向，IE11不支持<br>referer不存在的情况：https跳转到http,IE 6,7使用window.open/window.location.herf等跳转不带referer<br>referer 新旧策略：’<meta name="referrer" content="never">‘<br>旧4种策略：never  default origin always<br>新5种策略：no-Referer no-Referrer-when-downgrade origin origin-when-crossorigin unsafe-url</p>
+</li>
+<li><p>双重cookie:利用CSRF攻击不能获取到用户Cookie的特点，我们可以要求Ajax和表单请求携带一个Cookie中的值,后端接口验证Cookie中的字段与URL参数中的Cookie字段是否一致，不一致则拒绝。<br>缺点：任何跨域都会导致前端无法获取cookie</p>
+<ul>
+<li>如果用户访问的网站为<a href="http://www.a.com，而后端的api域名为api.a.com。那么在www.a.com下，前端拿不到api.a.com的Cookie，也就无法完成双重Cookie认证。" target="_blank" rel="noopener">www.a.com，而后端的api域名为api.a.com。那么在www.a.com下，前端拿不到api.a.com的Cookie，也就无法完成双重Cookie认证。</a></li>
+<li>于是这个认证Cookie必须被种在a.com下，这样每个子域都可以访问。</li>
+<li>任何一个子域都可以修改a.com下的Cookie。</li>
+<li>某个子域名存在漏洞被XSS攻击（例如upload.a.com）。虽然这个子域下并没有什么值得窃取的信息。但攻击者修改了a.com下的Cookie。</li>
+<li>攻击者可以直接使用自己配置的Cookie，对XSS中招的用户再向<a href="http://www.a.com下，发起CSRF攻击。" target="_blank" rel="noopener">www.a.com下，发起CSRF攻击。</a></li>
+</ul>
+</li>
+<li><p>token验证:csrf 无法直接截取用户cookie，header只能冒用，使用token就可以辨别哪些是真正用户<br>两种形式token：</p>
+<ul>
+<li>随机数生成token，存储在服务器，缺点：分布式不好存储，每次读取耗费资源性能</li>
+<li>计算token，Encrypted Token Pattern等方式，通常是使用UserID、时间戳和随机数，通过加密的方法生成。这样在校验时无需再去读取存储的Token，只用再次计算一次即可，既可以保证分布式服务的Token一致，又能保证Token不容易被破解。在token解密成功之后，服务器可以访问解析值，Token中包含的UserID和时间戳将会被拿来被验证有效性，将UserID与当前登录的UserID进行比较，并将时间戳与当前时间进行比较。</li>
+</ul>
+</li>
+<li><p>Samesite Cookie属性（兼容性差，仅chrome和firefox）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: foo=1; Samesite=Strict //表明这个 Cookie 在任何情况下都不可能作为第三方 Cookie，绝无例外</span><br><span class="line">Set-Cookie: bar=2; Samesite=Lax //这种称为宽松模式，比 Strict 放宽了点限制：假如这个请求是这种请求（改变了当前页面或者打开了新页面）且同时是个GET请求，则这个Cookie可以作为第三方Cookie</span><br></pre></td></tr></table></figure>
+
+<h4 id="防范网站被csrf利用："><a href="#防范网站被csrf利用：" class="headerlink" title="防范网站被csrf利用："></a>防范网站被csrf利用：</h4><p>  严格管理所有的上传接口，防止任何预期之外的上传内容（例如HTML）。<br>  添加Header X-Content-Type-Options: nosniff 防止黑客上传HTML内容的资源（例如图片）被解析为网页。<br>  对于用户上传的图片，进行转存或者校验。不要直接使用用户填写的图片链接。<br>  当前用户打开其他用户填写的链接时，需告知风险（这也是很多论坛不允许直接在内容中发布外域链接的原因之一，不仅仅是为了用户留存，也有安全考虑。</p>
+<p>  对于jsonp劫持：Referer 过滤（正则）不严谨，动态token(暴力破解)</p>
+</li>
+</ul>
+<h3 id="点击劫持"><a href="#点击劫持" class="headerlink" title="点击劫持"></a>点击劫持</h3><ol>
+<li><p>在 Web 页面中隐藏了一个透明的 iframe，用外层假页面诱导用户点击，实际上是在隐藏的 iframe 上触发了点击事件进行用户不知情的操作。</p>
+<p>防范方式：</p>
+<p>通过可以写一段JavaScript代码，以禁止iframe的嵌套。这种方法叫作frame busting。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (top.location != location) &#123;</span><br><span class="line">  top.location = self.location;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Content-Security-Policy: sandbox <value>;</value></p>
+<ul>
+<li>allow-forms 允许嵌入式浏览上下文提交表单。如果未使用此关键字，则不允许此操作。</li>
+<li>allow-modals 允许嵌入式浏览上下文打开模态窗口。</li>
+<li>allow-orientation-lock 允许嵌入式浏览上下文禁用锁定屏幕方向的功能。</li>
+<li>allow-pointer-lock 允许嵌入式浏览上下文使用Pointer Lock API。</li>
+<li>allow-popups允许弹出窗口（像window.open，target=”_blank”，showModalDialog）。如果未使用此关键字，则该功能将无提示失败。</li>
+<li>allow-popups-to-escape-sandbox 允许沙盒文档打开新窗口而不强制沙盒标记。例如，这将允许安全地沙箱化第三方广告，而不会对登陆页面施加相同的限制。</li>
+<li>allow-same-origin 允许将内容视为来自其正常来源。如果未使用此关键字，则嵌入的内容将被视为来自唯一来源。</li>
+<li>allow-scripts 允许嵌入式浏览上下文运行脚本（但不创建弹出窗口）。如果未使用此关键字，则不允许此操作。</li>
+<li>allow-top-navigation 允许嵌入式浏览上下文将内容导航（加载）到顶级浏览上下文。如果未使用此关键字，则不允许此操作。</li>
+</ul>
+</li>
+</ol>
+<p>  frame busting有一些缺陷，由于它是用JavaScript写的，控制能力并不是特别强，因此有很多方法可以绕过它。此外像HTML5的sandbox属性、IE中iframe的security属性等，都可以限制iframe页面中的JavaScript脚本执行，从而使frame busting失效。</p>
+<p> X-Frame-Options可以说是为了解决ClickJacking而生的,在响应头中设置X-Frame-Options头部，可以设置三个值：</p>
+<ul>
+<li>DENY：表示该页面不允许在 frame 中展示，即使在相同域名的页面中嵌套也不允许</li>
+<li>sameorigin：表示该页面可以在相同域名页面的 frame 中展示</li>
+<li>allow-from uri：表示该页面可以在指定来源的 frame 中展示</li>
+</ul>
+<ol start="2">
+<li><p>图片覆盖也可以起到类似的点击劫持的作用。（XSIO，Cross Site Image Overlaying），通过调整图片的style可以使图片覆盖的任意指定位置。<br>由于img标签在很多站点都是对用户开放的，在防御XSIO时，需要检查用户提交的HTML代码中，img标签的style属性是否可能导致浮出。</p>
+</li>
+<li><p>拖拽劫持与数据窃取：<br>目前很多浏览器都支持Drag &amp; Drop的API。浏览器中的拖拽对象可以是一个链接，也可以是一段文字，还可以从一个窗口拖拽到另一个窗口，因此拖拽是不受同源策略限制的。<br>拖拽劫持的思路是诱使用户从隐藏的不可见iframe中拖拽出攻击者希望得到的数据，然后放到攻击者能控制的另外一个页面中，从而窃取数据。</p>
+</li>
+</ol>
+<h3 id="url-跳转漏洞"><a href="#url-跳转漏洞" class="headerlink" title="url 跳转漏洞"></a>url 跳转漏洞</h3><p>借助URL跳转，也可以突破常见的基于“白名单方式”的一些安全限制，如传统IM里对于URL的传播会进行安全校验，但是对于大公司的域名及URL将直接允许通过并且显示会可信的URL，而一旦该URL里包含一些跳转漏洞将可能导致安全限制被绕过。如果引用一些资源的限制是依赖于“白名单方式”，同样可能被绕过导致安全风险，譬如常见的一些应用允许引入可信站点如baidu.com的视频，限制方式往往是检查URL是否是baidu.com来实现，如果baidu.com内含一个url跳转漏洞，将导致最终引入的资源属于不可信的第三方资源或者恶意站点，最终导致安全问题。</p>
+<p>如何绕过URL跳转，例如要跳到test.com：</p>
+<ol>
+<li>利用问号绕过限制，如：<a href="http://www.aaa.com/acb?url=http://test.com?login.aaa.com。那么，它其实是会跳转到这个test.com域名下，这个域名是我想要跳转的任意域名，而后面的它自身域名一定要带上，不带上就无法辅助用问号？这个特性来跳转到指定域名了，而跳转后，问号和问号后面的内容会变成这样：http://www.test.com/?login.aaa.com" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://test.com?login.aaa.com。那么，它其实是会跳转到这个test.com域名下，这个域名是我想要跳转的任意域名，而后面的它自身域名一定要带上，不带上就无法辅助用问号？这个特性来跳转到指定域名了，而跳转后，问号和问号后面的内容会变成这样：http://www.test.com/?login.aaa.com</a></li>
+<li>利用反斜杠和正斜杠绕过限制 如：<a href="http://www.aaa.com/acb?url=http://test.com\\login.aaa.com" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://test.com\\login.aaa.com</a>  如:<a href="http://www.aaa.com/acb?url=http://test.com\login.aaa.com" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://test.com\login.aaa.com</a>  如：<a href="http://www.aaa.com/acb?url=http://test.com\.login.aaa.com" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://test.com\.login.aaa.com</a></li>
+<li>利用白名单缺陷绕过限制，如果白名单只限制aaa.com就可以跳转，直接注册一个test.aaa.com这个域名就可以利用这个跳转。</li>
+<li>利用@绕过URL限制，如：<a href="http://www.aaa.com/acb?url=http://login.aaa.com@test.com，这方法在火狐里进行跳转，会有弹窗提示，在其他浏览器则没有。" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://login.aaa.com@test.com，这方法在火狐里进行跳转，会有弹窗提示，在其他浏览器则没有。</a></li>
+<li>利用#号绕过，如：<a href="http://www.aaa.com/acb?url=http://test.com#login.aaa.com" target="_blank" rel="noopener">http://www.aaa.com/acb?url=http://test.com#login.aaa.com</a></li>
+</ol>
+<p>防御：<br>　我们需要对传入的URL做有效性的验证，保证该URL来自于正确的地方，限制的方式同防止csrf一样可以包括;</p>
+<p>　　1.referer的限制</p>
+<p>　　如果确定传递url参数进入的来源，我们可以通过该方式来实现安全限制，保证该url的有效性，避免恶意用户自己生成跳转链接</p>
+<p>　　2.加入有效性验证Token</p>
+<p>　　我们保证所有生成的链接都是来自于我们可信域的，通过在生成的链接里加入用户不可控的Token对生成的链接进行校验，可以避免用户生成自己的恶意链接从而被利用,但是如果功能本身要求比较开放，可能导致有一定的限制。</p>
+<h3 id="jsonp-安全防御："><a href="#jsonp-安全防御：" class="headerlink" title="jsonp 安全防御："></a>jsonp 安全防御：</h3><p>1、严格安全的实现 CSRF 方式调用 JSON 文件：限制 Referer 、部署一次性 Token 等。<br>2、严格安装 JSON 格式标准输出 Content-Type 及编码（ Content-Type : application/json; charset=utf-8 ）。<br>3、严格过滤 callback 函数名及 JSON 里数据的输出。<br>4、严格限制对 JSONP 输出 callback 函数名的长度(如防御上面 flash 输出的方法)。<br>5、其他一些比较“猥琐”的方法：如在 Callback 输出之前加入其他字符(如：/**/、回车换行)这样不影响 JSON 文件加载，又能一定程度预防其他文件格式的输出。还比如 Gmail 早起使用 AJAX 的方式获取 JSON ，听过在输出 JSON 之前加入 while(1) ;这样的代码来防止 JS 远程调用。<br>6、<a href="https://github.com/aui/jsonp-sandbox/issues/13" target="_blank" rel="noopener">JSONP 沙箱技术</a></p>
+<h3 id="js沙箱机制"><a href="#js沙箱机制" class="headerlink" title="js沙箱机制"></a>js沙箱机制</h3><p><a href="https://juejin.cn/post/6844903954074058760" target="_blank" rel="noopener">参考</a></p>
+<h5 id="JS中沙箱的使用场景"><a href="#JS中沙箱的使用场景" class="headerlink" title="JS中沙箱的使用场景"></a>JS中沙箱的使用场景</h5><p>前端JS中也会有应用到沙箱的时候，毕竟有时候你要获取到的是第三方的JS文件或数据？而这数据又是不一定可信的时候，创建沙箱，做好保险工作尤为重要。<br>1、jsonp：解析服务器所返回的jsonp请求时，如果不信任jsonp中的数据，可以通过创建沙箱的方式来解析获取数据；（TSW中处理jsonp请求时，创建沙箱来处理和解析数据）；<br>2、执行第三方js：当你有必要执行第三方js的时候，而这份js文件又不一定可信的时候；<br>3、在线代码编辑器：相信大家都有使用过一些在线代码编辑器，而这些代码的执行，基本都会放置在沙箱中，防止对页面本身造成影响；（例如：<a href="https://codesandbox.io/s/new）" target="_blank" rel="noopener">https://codesandbox.io/s/new）</a><br>4、vue的服务端渲染：vue的服务端渲染实现中，通过创建沙箱执行前端的bundle文件；在调用createBundleRenderer方法时候，允许配置runInNewContext为true或false的形式，判断是否传入一个新创建的sandbox对象以供vm使用；<br>5、vue模板中表达式计算：vue模板中表达式的计算被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不能够在模板表达式中试图访问用户定义的全局变量。</p>
+<p>总而言之：当你要解析或执行不可信的JS的时候，当你要隔离被执行代码的执行环境的时候，当你要对执行代码中可访问对象进行限制的时候，沙箱就派上用场了。</p>
+<h5 id="沙箱实现一：with-new-Function"><a href="#沙箱实现一：with-new-Function" class="headerlink" title="沙箱实现一：with + new Function"></a>沙箱实现一：with + new Function</h5><p>假如你想要通过eval和function直接执行一段代码，这是不现实的，因为代码内部可以沿着作用域链往上找，篡改全局变量，这是我们不希望的，所以你需要让沙箱内的变量访问都在你的监控范围内；不过，你可以使用with API，在with的块级作用域下，变量访问会优先查找你传入的参数对象，之后再往上找，所以相当于你变相监控到了代码中的“变量访问”：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">function compileCode(code)&#123;</span><br><span class="line">  code = &apos;with(exposeObj)&#123;&apos;+code+&apos;&#125;&apos;</span><br><span class="line">  return new Function(&apos;exposeObj&apos;,code)</span><br><span class="line">&#125;</span><br><span class="line">//接着就是暴露可以被访问的变量exposeObj，以及阻断沙箱内的对外访问。通过es6提供的proxy特性，可以获取到对对象上的所有改写：</span><br><span class="line"></span><br><span class="line">function proxyObj(oringinalObj)&#123;</span><br><span class="line"> let exposeObj = new Poxy(oringinalObj,&#123;</span><br><span class="line">   // 其实还存在get、set函数，但是如果get和set函数只能拦截到当前对象属性的操作，对外部变量属性的读写操作无法监听到，所以只能使用has函数了</span><br><span class="line">   // 当oringinalObj = &#123;a:&#123;b:&apos;&apos;&#125;&#125;,调用的是console.log(a.b)的时候，has方法是无法监听到对b属性的访问的，假设所执行的代码是不可信的，这时候，它只需要通过a.b.__proto__就可以访问到Object构造函数的原型对象，再对原型对象进///行一些篡改，例如将toString就能影响到外部的代码逻辑的</span><br><span class="line">  // 通过访问原型链的方式，实现了沙箱逃逸，并且篡改了原型链上的toString方法，一旦外部的代码执行了toString方法，就可以实现xss攻击，注入第三方代码</span><br><span class="line">   has:(target,key)=&gt;&#123;</span><br><span class="line">     if([&apos;console&apos;,&apos;Math&apos;,&apos;Date&apos;].indexOf(key)!==-1)&#123;</span><br><span class="line">       return target[key]</span><br><span class="line">     &#125;</span><br><span class="line">     if(!target.hasownProperty)&#123;</span><br><span class="line">       throw new Error(&apos;...&apos;) </span><br><span class="line">     &#125;</span><br><span class="line">      return target[key]</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   return exposeObj</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建沙箱</span><br><span class="line">function createSandBox(code,obj)&#123;</span><br><span class="line">  let proxy = proxyObj(obj)</span><br><span class="line">  compileCode(code).call(proxy)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>补充： has 可以拦截一下查询</p>
+<ul>
+<li>属性查询: foo in proxy</li>
+<li>继承属性查询: foo in Object.create(proxy)</li>
+<li>with 检查: with(proxy) { (foo); }</li>
+<li>Reflect.has()</li>
+</ul>
+<h5 id="沙箱实现二：借助iframe实现沙箱"><a href="#沙箱实现二：借助iframe实现沙箱" class="headerlink" title="沙箱实现二：借助iframe实现沙箱"></a>沙箱实现二：借助iframe实现沙箱</h5><h5 id="nodejs中的沙箱使用"><a href="#nodejs中的沙箱使用" class="headerlink" title="nodejs中的沙箱使用"></a>nodejs中的沙箱使用</h5><p>nodejs中使用沙箱很简单，只需要利用原生的vm模块，便可以快速创建沙箱，同时指定上下文<br>为了避免通过原型链逃逸（nodejs中的对象并没有像浏览器端一样进行结构化复制，导致原型链依然保留），所以我们需要切断原型链，同时对于传入的暴露对象，只提供基本类型值。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年04月10日 14:31</p>
+        <p>原始链接： <a class="post-url" href="/2021/02/05/safety/" title="前端安全">https://luhu9012.github.io/2021/02/05/safety/</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/2021/02/05/safety/&title=《前端安全》 — 前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/2021/02/05/safety/&title=《前端安全》 — 前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/2021/02/05/safety/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端安全》 — 前端笔记&url=https://luhu9012.github.io/2021/02/05/safety/&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/2021/02/05/safety/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/2021/02/05/safety/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#XSS"><span class="post-toc-text">XSS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#漏洞总结"><span class="post-toc-text">漏洞总结</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#xss-类型"><span class="post-toc-text">xss 类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#防御"><span class="post-toc-text">防御</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CSRF"><span class="post-toc-text">CSRF</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#几种常见攻击类型"><span class="post-toc-text">几种常见攻击类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#CSRF的特点"><span class="post-toc-text">CSRF的特点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#csrf防护策略"><span class="post-toc-text">csrf防护策略</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#防范网站被csrf利用："><span class="post-toc-text">防范网站被csrf利用：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#点击劫持"><span class="post-toc-text">点击劫持</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#url-跳转漏洞"><span class="post-toc-text">url 跳转漏洞</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#jsonp-安全防御："><span class="post-toc-text">jsonp 安全防御：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#js沙箱机制"><span class="post-toc-text">js沙箱机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#JS中沙箱的使用场景"><span class="post-toc-text">JS中沙箱的使用场景</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#沙箱实现一：with-new-Function"><span class="post-toc-text">沙箱实现一：with + new Function</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#沙箱实现二：借助iframe实现沙箱"><span class="post-toc-text">沙箱实现二：借助iframe实现沙箱</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#nodejs中的沙箱使用"><span class="post-toc-text">nodejs中的沙箱使用</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2021/02/23/cssdemo/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          css demo
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/11/26/jsFP/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">jsFP</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>tabable 类模拟实现 | 前端笔记</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="luhu,luhu's Blog">
+  
+  <meta name="description" content="tapablegithub!tabable hook源码解析 同步钩子SyncHook同步串行不关心订阅函数执行后的返回值是什么。其原理是将监听(订阅)的函数存放到一个数组中, 发布时遍历数组中的监听函数并且将发布时的 arguments传递给监听函数 1234567891011121314151617181920212223242526class SyncHook &amp;#123;    const">
+<meta property="og:type" content="website">
+<meta property="og:title" content="tabable 类模拟实现">
+<meta property="og:url" content="https://luhu9012.github.io/engineering/tabablehook.html">
+<meta property="og:site_name" content="前端笔记">
+<meta property="og:description" content="tapablegithub!tabable hook源码解析 同步钩子SyncHook同步串行不关心订阅函数执行后的返回值是什么。其原理是将监听(订阅)的函数存放到一个数组中, 发布时遍历数组中的监听函数并且将发布时的 arguments传递给监听函数 1234567891011121314151617181920212223242526class SyncHook &amp;#123;    const">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-05-22T12:03:47.484Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tabable 类模拟实现">
+<meta name="twitter:description" content="tapablegithub!tabable hook源码解析 同步钩子SyncHook同步串行不关心订阅函数执行后的返回值是什么。其原理是将监听(订阅)的函数存放到一个数组中, 发布时遍历数组中的监听函数并且将发布时的 arguments传递给监听函数 1234567891011121314151617181920212223242526class SyncHook &amp;#123;    const">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">luhu&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        luhu&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="Github" target="_blank" href="//luhu9012.github.io/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      tabable 类模拟实现
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-03-31
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+            
+            <p><a href="https://github.com/webpack/tapable#tapable" target="_blank" rel="noopener">tapablegithub</a><br><a href="../imgs/tabablehook.png">!tabable hook</a><br><a href="https://zhuanlan.zhihu.com/p/100974318" target="_blank" rel="noopener">源码解析</a></p>
+<h3 id="同步钩子"><a href="#同步钩子" class="headerlink" title="同步钩子"></a>同步钩子</h3><h4 id="SyncHook"><a href="#SyncHook" class="headerlink" title="SyncHook"></a>SyncHook</h4><p>同步串行不关心订阅函数执行后的返回值是什么。其原理是将监听(订阅)的函数存放到一个数组中, 发布时遍历数组中的监听函数并且将发布时的 arguments传递给监听函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class SyncHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        this.options = options</span><br><span class="line">        this.hooks = []  //存放监听函数的数组</span><br><span class="line">    &#125;</span><br><span class="line">    tap(name, callback) &#123;</span><br><span class="line">        this.hooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    call(...args) &#123;</span><br><span class="line">        for (let i = 0; i &lt; this.hooks.length; i++) &#123;</span><br><span class="line">            this.hooks[i](...args)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const synchook = new SyncHook(&apos;name&apos;)</span><br><span class="line">// 注册监听函数</span><br><span class="line">synchook.tap(&apos;name&apos;, (data) =&gt; &#123;</span><br><span class="line">    console.log(&apos;name&apos;, data)</span><br><span class="line">&#125;)</span><br><span class="line">synchook.tap(&apos;age&apos;, (data) =&gt; &#123;</span><br><span class="line">    console.log(&apos;age&apos;, data)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">// 发布事件</span><br><span class="line">synchook.call(&apos;qiqingfu&apos;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="SyncBailHook"><a href="#SyncBailHook" class="headerlink" title="SyncBailHook"></a>SyncBailHook</h4><p>同步串行, 但是如果监听函数的返回值不为 null, 就终止后续的监听函数执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">class SyncBailHook &#123;</span><br><span class="line">        constructor(options) &#123;</span><br><span class="line">          this.options = options</span><br><span class="line">          this.hooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tap(name, callback) &#123;</span><br><span class="line">        this.hooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    call(...args) &#123;</span><br><span class="line">        let ret, i = 0</span><br><span class="line">        do &#123;</span><br><span class="line">            // 将第一个函数的返回结果赋值给ret, 在while中如果结果为 true就继续执行do代码块</span><br><span class="line">            ret = this.hooks[i++](...args)</span><br><span class="line">        &#125; while(!ret)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const syncbailhook = new SyncBailHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">syncbailhook.tap(&apos;name&apos;, (data) =&gt; &#123;</span><br><span class="line">    console.log(&apos;name&apos;, data)</span><br><span class="line">    return &apos;我的返回值不为null&apos;</span><br><span class="line">&#125;)</span><br><span class="line">syncbailhook.tap(&apos;age&apos;, (data) =&gt; &#123;</span><br><span class="line">    console.log(&apos;age&apos;, data)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">syncbailhook.call(&apos;qiqingfu&apos;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="SyncWaterfallHook"><a href="#SyncWaterfallHook" class="headerlink" title="SyncWaterfallHook"></a>SyncWaterfallHook</h4><p>同步串行瀑布流, 瀑布流指的是第一个监听函数的返回值,做为第二个监听函数的参数。第二个函数的返回值作为第三个监听函数的参数,依次类推…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class SyncWaterfallHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">          this.options = options</span><br><span class="line">          this.hooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tap(name, callback) &#123;</span><br><span class="line">        this.hooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    call(...args) &#123;</span><br><span class="line">        let [firstHook, ...otherHooks] = this.hooks</span><br><span class="line">        /**</span><br><span class="line">         * 通过解构赋值先取出第一个监听函数执行</span><br><span class="line">         * 并且将第一个函数的执行结果传递给第二个, 第二个传递给第三个,迭代的过程 </span><br><span class="line">         */</span><br><span class="line">        let ret = firstHook(...args)</span><br><span class="line">        otherHooks.reduce((f,n) =&gt; &#123;</span><br><span class="line">            return n(f)</span><br><span class="line">        &#125;, ret)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const syncWaterfallHook = new SyncWaterfallHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">syncWaterfallHook.tap(&apos;name&apos;, data =&gt; &#123;</span><br><span class="line">    console.log(&apos;name&apos;, data)</span><br><span class="line">    return 23</span><br><span class="line">&#125;)</span><br><span class="line">syncWaterfallHook.tap(&apos;age&apos;, data =&gt; &#123;</span><br><span class="line">    console.log(&apos;age&apos;, data)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">syncWaterfallHook.call(&apos;qiqingfu&apos;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="SyncLoopHook"><a href="#SyncLoopHook" class="headerlink" title="SyncLoopHook"></a>SyncLoopHook</h4><p>同步串行, 如果监听函数的返回值为 true, 则反复执行当前的监听函数,直到返回指为 undefind则继续执行下面的监听函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class SyncLoopHook &#123;</span><br><span class="line">  constructor(options) &#123;</span><br><span class="line">    this.options = options</span><br><span class="line">    this.hooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tap(name, callback) &#123;</span><br><span class="line">    this.hooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    call(...args) &#123;</span><br><span class="line">        for (let i = 0; i &lt; this.hooks.length; i++) &#123;</span><br><span class="line">            let hook = this.hooks[i], ret</span><br><span class="line">            do&#123;</span><br><span class="line">                ret = hook(...args)</span><br><span class="line">            &#125;while(ret === true &amp;&amp; ret !== undefined)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const syncLoopHook = new SyncLoopHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">let n1 = 0</span><br><span class="line">syncLoopHook.tap(&apos;name&apos;, data =&gt; &#123;</span><br><span class="line">    console.log(&apos;name&apos;, data)</span><br><span class="line">    return n1 &lt; 2 ? true : undefined</span><br><span class="line">&#125;)</span><br><span class="line">syncLoopHook.tap(&apos;end&apos;, data =&gt; &#123;</span><br><span class="line">    console.log(&apos;end&apos;, data)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">syncLoopHook.call(&apos;qiqingfu&apos;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="异步钩子"><a href="#异步钩子" class="headerlink" title="异步钩子"></a>异步钩子</h3><ul>
+<li>异步并行 (Parallel)<ul>
+<li>AsyncParallelHook</li>
+<li>AsyncParalleBailHook</li>
+</ul>
+</li>
+<li>异步串行 (Series)<ul>
+<li>AsyncSeriesHook</li>
+<li>AsyncSeriesBailHook</li>
+<li>AsyncSeriesWaterfallHook</li>
+</ul>
+</li>
+</ul>
+<h4 id="AsyncParallelHook"><a href="#AsyncParallelHook" class="headerlink" title="AsyncParallelHook"></a>AsyncParallelHook</h4><p>异步并行, 监听的函数会一块执行, 哪个函数先执行完就先触发。不需要关心监听函数的返回值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">class AsyncParallelHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        this.options = options</span><br><span class="line">        this.asyncHooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    // 订阅</span><br><span class="line">    tapAsync(name, callback) &#123;</span><br><span class="line">        this.asyncHooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    // 发布</span><br><span class="line">    callAsync(...args) &#123;</span><br><span class="line">        /**</span><br><span class="line">         * callAsync(arg1, arg2,..., cb)</span><br><span class="line">         * 发布的时候最后一个参数可以是回调函数</span><br><span class="line">         * 订阅的每一个函数的最后一个参数也是一个回调函数,所有的订阅函数执行完</span><br><span class="line">         * 且都调用了最后一个函数,才会执行cb </span><br><span class="line">         */</span><br><span class="line">    const finalCallback = args.pop()</span><br><span class="line">        let i = 0</span><br><span class="line">        // 将这个作为最后一个参数传过去,使用的时候选择性调用</span><br><span class="line">        const done = () =&gt; &#123;</span><br><span class="line">            ++i === this.asyncHooks.length &amp;&amp; finalCallback()</span><br><span class="line">        &#125;</span><br><span class="line">        this.asyncHooks.forEach(hook =&gt; &#123;</span><br><span class="line">            hook(...args, done)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const asyncParallelHook = new AsyncParallelHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">asyncParallelHook.tapAsync(&apos;name&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">    console.log(&apos;name&apos;, data)</span><br><span class="line">    done()</span><br><span class="line">  &#125;, 2000)</span><br><span class="line">&#125;)</span><br><span class="line">asyncParallelHook.tapAsync(&apos;age&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">    console.log(&apos;age&apos;, data)</span><br><span class="line">    done()</span><br><span class="line">  &#125;, 3000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">console.time(&apos;time&apos;)</span><br><span class="line">asyncParallelHook.callAsync(&apos;qiqingfu&apos;, () =&gt; &#123;</span><br><span class="line">  console.log(&apos;监听函数都调用了 done&apos;)</span><br><span class="line">  console.timeEnd(&apos;time&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="AsyncParalleBailHook"><a href="#AsyncParalleBailHook" class="headerlink" title="AsyncParalleBailHook?"></a>AsyncParalleBailHook?</h4><h4 id="AsyncSeriesHook"><a href="#AsyncSeriesHook" class="headerlink" title="AsyncSeriesHook"></a>AsyncSeriesHook</h4><p>异步串行钩子类, 不关心 callback的参数。异步函数一个一个的执行,但是必须调用 done函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">class AsyncSeriesHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        this.options = options</span><br><span class="line">        this.asyncHooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tapAsync(name, callback) &#123;</span><br><span class="line">        this.asyncHooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    callAsync(...args) &#123;</span><br><span class="line">        const finalCallback = args.pop()</span><br><span class="line">        </span><br><span class="line">        let i = 0</span><br><span class="line">        const done = () =&gt; &#123;</span><br><span class="line">            let task = this.asyncHooks[i++]</span><br><span class="line">            task ? task(...args, done) : finalCallback()</span><br><span class="line">        &#125;</span><br><span class="line">        done()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const asyncSeriesHook = new AsyncSeriesHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesHook.tapAsync(&apos;name&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;name&apos;, data)</span><br><span class="line">        done()</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesHook.tapAsync(&apos;age&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;age&apos;, data)</span><br><span class="line">        done()</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">console.time(&apos;time&apos;)</span><br><span class="line">asyncSeriesHook.callAsync(&apos;qiqingfu&apos;, () =&gt; &#123;</span><br><span class="line">    console.log(&apos;end&apos;)</span><br><span class="line">    console.timeEnd(&apos;time&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="AsyncSeriesBailHook"><a href="#AsyncSeriesBailHook" class="headerlink" title="AsyncSeriesBailHook"></a>AsyncSeriesBailHook</h4><p>异步串行钩子类, callback的参数如果不是 null, 后面所有的异步函数都不会执行,直接执行 callAsync方法的回调函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">class AsyncSeriesBailHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        this.options = options</span><br><span class="line">        this.asyncHooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tapAsync(name, callback) &#123;</span><br><span class="line">        this.asyncHooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    callAsync(...args) &#123;</span><br><span class="line">        const finalCallback = args.pop()</span><br><span class="line"> </span><br><span class="line">        let i = 0</span><br><span class="line">        const done = data =&gt; &#123;</span><br><span class="line">      if (data) return finalCallback()</span><br><span class="line">      let task = this.asyncHooks[i++]</span><br><span class="line">      task ? task(...args, done) : finalCallback()</span><br><span class="line">        &#125;</span><br><span class="line">        done()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const asyncSeriesBailHook = new AsyncSeriesBailHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesBailHook.tapAsync(&apos;1&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;1&apos;, data)</span><br><span class="line">        done(null)</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesBailHook.tapAsync(&apos;2&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;2&apos;, data)</span><br><span class="line">        done(null)</span><br><span class="line">    &#125;, 2000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">console.time(&apos;times&apos;)</span><br><span class="line">asyncSeriesBailHook.callAsync(&apos;qiqingfu&apos;, () =&gt; &#123;</span><br><span class="line">    console.log(&apos;end&apos;)</span><br><span class="line">    console.timeEnd(&apos;times&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="AsyncSeriesWaterfallHook"><a href="#AsyncSeriesWaterfallHook" class="headerlink" title="AsyncSeriesWaterfallHook"></a>AsyncSeriesWaterfallHook</h4><p>异步串行钩子类, 上一个监听函数 callback(err, data)的第二个参数, 可以作为下一个监听函数的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">class AsyncSeriesWaterfallHook &#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        this.options = options</span><br><span class="line">        this.asyncHooks = []</span><br><span class="line">    &#125;</span><br><span class="line">    tapAsync(name, callback) &#123;</span><br><span class="line">        this.asyncHooks.push(callback)</span><br><span class="line">    &#125;</span><br><span class="line">    callAsync(...args) &#123;</span><br><span class="line">        const finalCallback = args.pop()</span><br><span class="line"> </span><br><span class="line">        let i = 0, once</span><br><span class="line">        const done = (err, data) =&gt; &#123;</span><br><span class="line">            let task = this.asyncHooks[i++]</span><br><span class="line">            if (!task) return finalCallback()</span><br><span class="line">            if (!once) &#123;</span><br><span class="line">                // 只执行一次</span><br><span class="line">                task(...args, done)</span><br><span class="line">                once = true</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                task(data, done)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        done()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">const asyncSeriesWaterfallHook = new AsyncSeriesWaterfallHook(&apos;name&apos;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesWaterfallHook.tapAsync(&apos;1&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;1&apos;, data)</span><br><span class="line">        done(null, &apos;第一个callback传递的参数&apos;)</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">asyncSeriesWaterfallHook.tapAsync(&apos;2&apos;, (data, done) =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;2&apos;, data)</span><br><span class="line">        done(null)</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line">console.time(&apos;timer&apos;)</span><br><span class="line">asyncSeriesWaterfallHook.callAsync(&apos;qiqingfu&apos;, () =&gt; &#123;</span><br><span class="line">    console.log(&apos;end&apos;)</span><br><span class="line">    console.timeEnd(&apos;timer&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年05月22日 20:03</p>
+        <p>原始链接： <a class="post-url" href="/engineering/tabablehook.html" title="tabable 类模拟实现">https://luhu9012.github.io/engineering/tabablehook.html</a></p>
+        <footer>
+            <a href="https://luhu9012.github.io">
+                <img src="/images/logo.png" alt="luhu9012">
+                luhu9012
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://luhu9012.github.io/engineering/tabablehook.html&title=《tabable 类模拟实现》 — 前端笔记&pic=https://luhu9012.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://luhu9012.github.io/engineering/tabablehook.html&title=《tabable 类模拟实现》 — 前端笔记&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://luhu9012.github.io/engineering/tabablehook.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《tabable 类模拟实现》 — 前端笔记&url=https://luhu9012.github.io/engineering/tabablehook.html&via=https://luhu9012.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://luhu9012.github.io/engineering/tabablehook.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://luhu9012.github.io/engineering/tabablehook.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#同步钩子"><span class="post-toc-text">同步钩子</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SyncHook"><span class="post-toc-text">SyncHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SyncBailHook"><span class="post-toc-text">SyncBailHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SyncWaterfallHook"><span class="post-toc-text">SyncWaterfallHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SyncLoopHook"><span class="post-toc-text">SyncLoopHook</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#异步钩子"><span class="post-toc-text">异步钩子</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AsyncParallelHook"><span class="post-toc-text">AsyncParallelHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AsyncParalleBailHook"><span class="post-toc-text">AsyncParalleBailHook?</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AsyncSeriesHook"><span class="post-toc-text">AsyncSeriesHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AsyncSeriesBailHook"><span class="post-toc-text">AsyncSeriesBailHook</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AsyncSeriesWaterfallHook"><span class="post-toc-text">AsyncSeriesWaterfallHook</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 luhu9012<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://luhu9012.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 0
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/bom/">bom</a><a class="category-link" href="/categories/css/">css</a><a class="category-link" href="/categories/js实践/">js实践</a><a class="category-link" href="/categories/js异步编程/">js异步编程</a><a class="category-link" href="/categories/动画/">动画</a><a class="category-link" href="/categories/框架/">框架</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/项目/">项目</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/async-异步/" style="font-size: 10px;">async 异步</a> <a href="/tags/bfc/" style="font-size: 10px;">bfc</a> <a href="/tags/bind-new-instanceof-call-applay-继承-decorator-nextTick/" style="font-size: 10px;">bind new instanceof call applay 继承 decorator  nextTick</a> <a href="/tags/canvas/" style="font-size: 10px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/css-概念/" style="font-size: 10px;">css 概念</a> <a href="/tags/css动画-js动画/" style="font-size: 10px;">css动画 js动画</a> <a href="/tags/es6-语法/" style="font-size: 10px;">es6 语法</a> <a href="/tags/javaSciript/" style="font-size: 20px;">javaSciript</a> <a href="/tags/js-机制/" style="font-size: 10px;">js 机制</a> <a href="/tags/js基础-js运行机制/" style="font-size: 10px;">js基础 js运行机制</a> <a href="/tags/oop/" style="font-size: 10px;">oop</a> <a href="/tags/vue-js/" style="font-size: 10px;">vue.js</a> <a href="/tags/垂直居中/" style="font-size: 10px;">垂直居中</a> <a href="/tags/奇技淫巧/" style="font-size: 10px;">奇技淫巧</a> <a href="/tags/性能/" style="font-size: 10px;">性能</a> <a href="/tags/文件上传/" style="font-size: 20px;">文件上传</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/浏览器-V8/" style="font-size: 10px;">浏览器  V8</a> <a href="/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/tags/防抖-节流-柯里化-pip-compose-js缓存算法-数组与树形结构互转-图片并发下载/" style="font-size: 10px;">防抖 节流 柯里化 pip compose js缓存算法 数组与树形结构互转 图片并发下载</a> <a href="/tags/项目/" style="font-size: 20px;">项目</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
